@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador de Código Atractivo</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+
+    <style>
+        /* Estilos generales de la página */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eef2f7; /* Un fondo gris azulado suave */
+            color: #333;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        p.description {
+            margin-bottom: 30px;
+            color: #666;
+        }
+
+        /* Contenedor que simula una ventana de editor de código */
+        .code-window {
+            width: 90%;
+            max-width: 1000px;
+            border-radius: 8px;
+            overflow: hidden; /* Para que las esquinas redondeadas recorten el contenido */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); /* Sombra elegante */
+        }
+
+        /* Barra de título falsa del editor */
+        .window-header {
+            background-color: #1c1e26; /* Un poco más oscuro que el fondo de Prism */
+            color: #abb2bf;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Los tres puntitos de colores tipo Mac */
+        .dots {
+            display: flex;
+            gap: 6px;
+            margin-right: 15px;
+        }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background-color: #ff5f56; }
+        .dot-yellow { background-color: #ffbd2e; }
+        .dot-green { background-color: #27c93f; }
+
+
+        /* Ajuste fino al bloque PRE de Prism */
+        /* 'pre[class*="language-"]' es como Prism selecciona su bloque */
+        pre[class*="language-"] {
+            margin: 0 !important; /* Quitamos el margen por defecto de Prism */
+            border-radius: 0 0 8px 8px !important; /* Redondeamos solo abajo */
+            max-height: 80vh; /* Altura máxima por si el código es eterno */
+        }
+
+        /* Ajuste para que el tamaño de fuente del código sea legible */
+        code[class*="language-"] {
+            font-size: 14px;
+            font-family: 'Fira Code', 'Consolas', monospace; /* Fuentes bonitas para código */
+            line-height: 1.5;
+        }
+
+    </style>
+</head>
+<body>
+
+<h1>Plantilla HTML5 + CSS Responsivo</h1>
+<p class="description">El siguiente código muestra una estructura de 3 columnas con cabecera y pie de página.</p>
+
+<div class="code-window">
+    <div class="window-header">
+        <div class="dots">
+            <div class="dot dot-red"></div>
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-green"></div>
+        </div>
+        <span>index.html (Vista de Código)</span>
+    </div>
+
+    <pre><code class="language-html">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Creación de plantilla&lt;/title&gt;
+
+    &lt;style&gt;
+
+        /* ==================================================
+            CONFIGURACIÓN GENERAL
+            ================================================== */
+
+        /* Quitamos el margen por defecto que trae el navegador */
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* La propiedad box-sizing permite que el padding
+            no aumente el tamaño real del elemento */
+        * {
+            box-sizing: border-box;
+        }
+
+        /* ==================================================
+            ESTILO DEL ENCABEZADO
+            ================================================== */
+
+        /* Creamos el diseño visual del header */
+        .header {
+            background-color: #f1f1f1;   /* Color de fondo */
+            padding: 20px;               /* Espaciado interno */
+            text-align: center;          /* Centrar texto */
+        }
+
+        /* ==================================================
+            ESTILO DEL MENÚ DE NAVEGACIÓN
+            ================================================== */
+
+        /* Contenedor principal del menú */
+        .topnav {
+            overflow: hidden;           /* Evita que los elementos flotantes se salgan */
+            background-color: #333;     /* Color de fondo oscuro */
+        }
+
+        /* Estilo de los enlaces dentro del menú */
+        .topnav a {
+            float: left;                /* Coloca los enlaces uno al lado del otro */
+            display: block;             /* Permite aplicar padding */
+            color: #f2f2f2;             /* Color del texto */
+            text-align: center;         /* Centrar texto */
+            padding: 14px 16px;         /* Espaciado interno */
+            text-decoration: none;      /* Quitar subrayado */
+        }
+
+        /* Efecto cuando el mouse pasa sobre el enlace */
+        .topnav a:hover {
+            background-color: #ddd;     /* Cambia el fondo */
+            color: black;               /* Cambia el color del texto */
+        }
+
+        /* ==================================================
+            DISEÑO DE LAS COLUMNAS
+            ================================================== */
+
+        /* Clase base para todas las columnas */
+        .column {
+            float: left;    /* Hace que las columnas se coloquen horizontalmente */
+            padding: 10px;  /* Espaciado interno */
+        }
+
+        /* Columnas laterales (izquierda y derecha) */
+        .column.side {
+            width: 15%;     /* Ancho del 15% */
+            background-color: #f9f9f9;
+        }
+
+        /* Columna central (contenido principal) */
+        .column.middle {
+            width: 70%;     /* Ancho del 70% */
+        }
+
+        /* Limpiar el efecto float para que el footer
+            no se suba al lado de las columnas */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        /* ==================================================
+            DISEÑO RESPONSIVO
+            ================================================== */
+
+        /* Cuando la pantalla sea menor a 600px,
+            las columnas ocuparán el 100% del ancho
+            y se mostrarán una debajo de otra */
+        @media screen and (max-width: 600px) {
+            .column {
+                width: 100%;
+            }
+        }
+
+        /* ==================================================
+            PIE DE PÁGINA
+            ================================================== */
+
+        .footer {
+            background-color: #f1f1f1;  /* Color de fondo */
+            padding: 10px;              /* Espaciado interno */
+            text-align: center;         /* Centrar texto */
+        }
+
+    &lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+
+    &lt;div class="header"&gt;
+        &lt;h1&gt;Práctica CSS&lt;/h1&gt;
+        &lt;p&gt;Plantilla Web Profesional&lt;/p&gt;
+    &lt;/div&gt;
+
+
+    &lt;div class="topnav"&gt;
+        &lt;a href="#"&gt;INICIO&lt;/a&gt;
+        &lt;a href="#"&gt;MISION&lt;/a&gt;
+        &lt;a href="#"&gt;VISION&lt;/a&gt;
+        &lt;a href="#"&gt;CONTACTO&lt;/a&gt;
+    &lt;/div&gt;
+
+
+    &lt;div class="row"&gt;
+
+        &lt;div class="column side"&gt;
+            &lt;h2&gt;Columna 1&lt;/h2&gt;
+            &lt;p&gt;
+                Esta columna puede utilizarse como menú secundario,
+                enlaces importantes o información adicional.
+            &lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;div class="column middle"&gt;
+            &lt;h2&gt;Columna Principal&lt;/h2&gt;
+            &lt;p&gt;
+                Aquí se coloca el contenido más importante del sitio web.
+                Es el área principal que ocupa mayor espacio.
+            &lt;/p&gt;
+            &lt;p&gt;
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Vivamus venenatis velit nec neque ultricies.
+            &lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;div class="column side"&gt;
+            &lt;h2&gt;Columna 3&lt;/h2&gt;
+            &lt;p&gt;
+                Espacio para anuncios, noticias o información adicional.
+            &lt;/p&gt;
+        &lt;/div&gt;
+
+    &lt;/div&gt;
+
+
+    &lt;div class="footer"&gt;
+        &lt;p&gt;© 2026 - Diseño Web con CSS | Práctica 5&lt;/p&gt;
+    &lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+        </code></pre>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+
+</body>
+</html>
