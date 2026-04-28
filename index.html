@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¿Qué es PyMySQL? El puente Python + MySQL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Guía: Crear un proyecto Django con MySQL desde cero</title>
     <style>
         * {
             margin: 0;
@@ -12,330 +12,469 @@
         }
 
         body {
-            background: #eef2ff;
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: #f1f5f9;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
             padding: 2rem 1rem;
-            line-height: 1.5;
             color: #0f172a;
         }
 
-        .card {
-            max-width: 1000px;
+        .container {
+            max-width: 1100px;
             margin: 0 auto;
             background: white;
             border-radius: 2rem;
-            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
             overflow: hidden;
-            transition: all 0.2s;
+            padding: 2rem 2rem 3rem;
         }
 
-        .header {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            padding: 2rem 2rem 1.5rem;
-            color: white;
-        }
-
-        .header h1 {
+        h1 {
             font-size: 2.2rem;
+            border-left: 6px solid #0ea5e9;
+            padding-left: 1.2rem;
+            margin-bottom: 0.5rem;
             font-weight: 700;
-            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #1e293b, #2d3a4e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .subhead {
+            color: #334155;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.75rem;
+            font-size: 1.05rem;
             display: flex;
             align-items: center;
             gap: 12px;
             flex-wrap: wrap;
         }
 
-        .header h1 span {
-            background: #3b82f6;
-            font-size: 1rem;
-            padding: 0.2rem 0.8rem;
+        .badge {
+            background: #e6f7ff;
+            color: #0c4a6e;
+            font-weight: 600;
             border-radius: 40px;
-            font-weight: 500;
-        }
-
-        .header p {
-            margin-top: 0.8rem;
-            font-size: 1.1rem;
-            color: #cbd5e1;
-            max-width: 85%;
-        }
-
-        .content {
-            padding: 2rem 2rem 2.5rem;
-        }
-
-        .highlight {
-            background: #f0f9ff;
-            border-left: 5px solid #0ea5e9;
-            padding: 1.2rem 1.5rem;
-            border-radius: 1rem;
-            margin: 1.5rem 0;
-            font-weight: 500;
+            padding: 0.2rem 1rem;
+            font-size: 0.8rem;
+            display: inline-block;
         }
 
         h2 {
-            font-size: 1.6rem;
-            margin-top: 1.8rem;
-            margin-bottom: 1rem;
+            font-size: 1.7rem;
+            margin: 1.8rem 0 1rem 0;
+            padding-bottom: 0.3rem;
+            border-bottom: 3px solid #bae6fd;
             color: #0f172a;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        h2 i {
-            font-size: 1.8rem;
         }
 
         h3 {
-            font-size: 1.25rem;
-            margin-top: 1.5rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+            margin: 1.5rem 0 0.75rem 0;
             color: #1e293b;
-            border-left: 3px solid #38bdf8;
-            padding-left: 0.75rem;
-        }
-
-        .feature-grid {
-            display: flex;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-            margin: 1.5rem 0;
-        }
-
-        .feature-card {
             background: #f8fafc;
-            border-radius: 1.2rem;
-            padding: 1.2rem;
-            flex: 1;
-            min-width: 200px;
-            border: 1px solid #e2e8f0;
-            transition: all 0.2s;
+            padding: 0.4rem 0.8rem;
+            border-radius: 16px;
+            display: inline-block;
         }
 
-        .feature-card strong {
+        .step {
+            background: #ffffff;
+            margin: 1rem 0;
+            padding: 0.8rem 1rem 0.8rem 1.8rem;
+            border-left: 4px solid #38bdf8;
+            border-radius: 16px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            transition: all 0.1s ease;
+        }
+
+        .step strong {
             color: #0284c7;
-            font-size: 1.1rem;
-            display: block;
-            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            display: inline-block;
+            min-width: 35px;
         }
 
-        code, .inline-code {
-            background: #1e293b;
+        code, .code-block {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            background: #0f172a;
             color: #e2e8f0;
             padding: 0.2rem 0.5rem;
             border-radius: 12px;
-            font-family: 'Fira Code', 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            display: inline-block;
         }
 
         pre {
             background: #0f172a;
             padding: 1rem 1.5rem;
-            border-radius: 1rem;
+            border-radius: 20px;
             overflow-x: auto;
             margin: 1rem 0;
             font-size: 0.85rem;
+            line-height: 1.45;
             color: #f1f5f9;
-            box-shadow: inset 0 0 0 1px #334155;
+            box-shadow: inset 0 0 0 1px #334155, 0 4px 8px rgba(0,0,0,0.05);
         }
 
         pre code {
             background: transparent;
             padding: 0;
             color: inherit;
+            font-size: inherit;
         }
 
-        .flow-steps {
-            background: #fefce8;
-            border: 1px solid #fde047;
-            border-radius: 1.2rem;
-            padding: 1rem 1.5rem;
+        .image-placeholder {
+            background: #eef2ff;
+            border: 1px dashed #94a3b8;
+            border-radius: 20px;
+            padding: 1rem;
             margin: 1rem 0;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
-        .flow-steps ol {
-            margin-left: 1.2rem;
-            margin-top: 0.5rem;
-        }
-
-        .flow-steps li {
-            margin: 0.6rem 0;
-        }
-
-        .badge-mysql {
-            background: #00758f;
-            color: white;
-            padding: 0.15rem 0.7rem;
+        .image-placeholder span {
+            background: #cbd5e1;
+            padding: 0.2rem 1rem;
             border-radius: 30px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            display: inline-block;
-            vertical-align: middle;
+            font-family: monospace;
+        }
+
+        .mock-img {
+            background: #cbd5e6;
+            border-radius: 14px;
+            font-weight: 500;
+            padding: 0.4rem 1rem;
+            font-size: 0.75rem;
+        }
+
+        .alert-info {
+            background: #e0f2fe;
+            border-left: 5px solid #0ea5e9;
+            padding: 0.8rem 1.2rem;
+            border-radius: 18px;
+            margin: 1.2rem 0;
+        }
+
+        .file-path {
+            background: #ede9fe;
+            color: #4c1d95;
+            font-family: monospace;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        hr {
+            margin: 2rem 0;
+            border: 0;
+            height: 1px;
+            background: linear-gradient(to right, #cbd5e1, transparent);
         }
 
         footer {
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid #e2e8f0;
+            text-align: center;
+            margin-top: 3rem;
             font-size: 0.8rem;
             color: #475569;
-            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 1.5rem;
         }
 
         @media (max-width: 700px) {
-            .content {
+            .container {
                 padding: 1.2rem;
             }
-            .header h1 {
-                font-size: 1.6rem;
+            pre {
+                font-size: 0.75rem;
+                padding: 0.8rem;
             }
-            .header p {
-                font-size: 0.95rem;
+            .step {
+                padding-left: 1rem;
+            }
+            h1 {
+                font-size: 1.7rem;
             }
         }
     </style>
 </head>
 <body>
-<div class="card">
-    <div class="header">
-        <h1>
-            🐬 PyMySQL
-            <span>conector en Python puro</span>
-        </h1>
-        <p>El puente que permite que tu código Python hable con MySQL / MariaDB: guardar, consultar, actualizar y borrar datos.</p>
+<div class="container">
+    <h1>🐍 Guía definitiva: Django + MySQL</h1>
+    <h1>Ricardo Quintanilla</h1>
+    <div class="subhead">
+        <span class="badge">📘 Paso a paso</span>
+        <span class="badge">⚙️ Entorno virtual</span>
+        <span class="badge" title="librería de Python para conectar con mysql">🐬 PyMySQL</span>
+        <span class="badge">📁 Modelos: USERS, CATEGORIES, TASK_LOGS</span>
     </div>
-    <div class="content">
-        <div class="highlight">
-            💡 <strong>¿Qué es PyMySQL en términos simples?</strong><br>
-            Es una librería de Python que funciona como un <strong>cliente</strong> o <strong>conector</strong> para interactuar con bases de datos MySQL y MariaDB.
-            Actúa como un intérprete que traduce las órdenes de Python a consultas SQL y viceversa.
+    <p><strong>📥 Requisito previo:</strong> Descargar Python desde <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org/downloads/</a> e instalarlo (recordar marcar "Add to PATH").</p>
+
+    <!-- 1. Ir a C, crear carpeta 6060 -->
+    <h2>🚀 Configuración inicial del proyecto</h2>
+    <div class="step"><strong>1 & 2.</strong> Abrir terminal (PowerShell o CMD) e ir al disco <strong>C:\</strong> y crear carpeta <code class="code-block">6060</code>:
+        <pre><code>cd C:\
+mkdir 6060</code></pre>
+    </div>
+    <div class="step"><strong>3 & 4.</strong> Acceder a la carpeta:
+        <pre><code>cd 6060</code></pre>
+    </div>
+    <div class="step"><strong>5.</strong> Crear entorno virtual:
+        <pre><code>python -m venv venv</code></pre>
+    </div>
+    <div class="step"><strong>6.</strong> Activar el entorno virtual (Windows PowerShell/CMD):
+        <pre><code>.\venv\Scripts\activate</code></pre>
+        <div class="image-placeholder">
+            📸 <span>media/image1.png</span> — Entorno activado correctamente (ejemplo visual)
         </div>
+    </div>
 
-        <h2>✨ ¿Qué lo hace especial?</h2>
-        <p>A diferencia de otros conectores como <code class="inline-code">mysql-connector-python</code>, <strong>PyMySQL</strong> destaca por ser <strong>100% Python puro</strong>. Esto trae ventajas clave:</p>
-
-        <div class="feature-grid">
-            <div class="feature-card">
-                <strong>🧩 Sin dependencias externas</strong>
-                No necesitas instalar bibliotecas de C en tu sistema ni lidiar con configuraciones complejas de compilación. Basta con un <code class="inline-code">pip install PyMySQL</code>.
-            </div>
-            <div class="feature-card">
-                <strong>⚡ Compatible con PyPy</strong>
-                Funciona perfectamente con PyPy, ideal si buscas un rendimiento optimizado en entornos que no usan CPython (el intérprete estándar).
-            </div>
-            <div class="feature-card">
-                <strong>🔄 Soporte moderno</strong>
-                Compatible con la mayoría de versiones de MySQL (5.x, 8.x) y MariaDB, manteniéndose actualizado.
-            </div>
+    <div class="step"><strong>7.</strong> Instalar Django dentro del entorno virtual:
+        <pre><code>pip install django</code></pre>
+        <div class="image-placeholder">
+            📸 <span>media/image2.png</span> — Proceso de instalación
         </div>
-
-        <h2>🔁 ¿Cómo funciona el flujo típico?</h2>
-        <p>Usar PyMySQL sigue un patrón bastante claro y universal. Estos son los pasos fundamentales:</p>
-
-        <div class="flow-steps">
-            <ol>
-                <li><strong>📡 Establecer conexión</strong> — Proporcionas el host, usuario, contraseña, puerto y nombre de la base de datos.</li>
-                <li><strong>🎯 Crear un Cursor</strong> — El cursor es el objeto que te permite ejecutar sentencias SQL y recorrer los resultados.</li>
-                <li><strong>📝 Ejecutar SQL</strong> — Envías comandos como <code class="inline-code">SELECT</code>, <code class="inline-code">INSERT</code>, <code class="inline-code">UPDATE</code> o <code class="inline-code">DELETE</code>.</li>
-                <li><strong>💾 Hacer Commit</strong> — Si cambias datos (INSERT, UPDATE, DELETE), debes confirmar la acción usando <code class="inline-code">commit()</code>.</li>
-                <li><strong>🔌 Cerrar</strong> — Siempre es buena práctica cerrar el cursor y la conexión para liberar recursos.</li>
-            </ol>
+    </div>
+    <div class="step"><strong>8 & 9.</strong> Verificar versión de Django:
+        <pre><code>django-admin --version</code></pre>
+        <div class="image-placeholder">
+            📸 <span>media/image3.png</span> — Ejemplo: 5.0.x
         </div>
+    </div>
+    <div class="step"><strong>10.</strong> Instalar <strong>PyMySQL</strong> para conectar Django con MySQL:
+        <pre><code>pip install pymysql</code></pre>
+        <div class="image-placeholder">
+            📸 <span>media/image4.png</span> — Instalación de pymysql
+        </div>
+    </div>
 
-        <h3>🧪 Ejemplo mínimo de código</h3>
+    <div class="step"><strong>11.</strong> Crear proyecto Django llamado <code>miweb</code>:
+        <pre><code>django-admin startproject miweb</code></pre>
+        <div class="image-placeholder">
+            📸 <span>media/image5.png</span> — Estructura generada
+        </div>
+    </div>
+    <div class="step"><strong>12.</strong> Entrar al proyecto:
+        <pre><code>cd miweb</code></pre>
+        <div class="image-placeholder">
+            📸 <span>media/image6.png</span> — Directorio actual
+        </div>
+    </div>
+    <div class="step"><strong>13.</strong> Ver paquetes instalados:
+        <pre><code>pip list</code></pre>
+        <div class="image-placeholder">
+            📸 <span>media/image7.png</span> — Listado incluyendo Django, pip, pymysql
+        </div>
+    </div>
+
+    <h2>⚙️ Configuración de base de datos y adaptador</h2>
+    <div class="step"><strong>14.</strong> Editar archivo <span class="file-path">miweb/__init__.py</span> y dejarlo así (inicializar PyMySQL):
         <pre><code>import pymysql
-
-# 1. Establecer conexión
-conexion = pymysql.connect(
-    host='localhost',
-    user='root',
-    password='tu_contraseña',
-    database='mi_bd',
-    port=3306
-)
-
-try:
-    # 2. Crear cursor
-    cursor = conexion.cursor()
-
-    # 3. Ejecutar SQL
-    sql = "SELECT nombre, email FROM USERS WHERE rol = 'admin'"
-    cursor.execute(sql)
-
-    # Obtener resultados
-    for (nombre, email) in cursor:
-        print(f"Admin: {nombre} - {email}")
-
-    # Ejemplo de INSERT con commit
-    insert_sql = "INSERT INTO CATEGORIES (name, created_at) VALUES ('Trabajo', NOW())"
-    cursor.execute(insert_sql)
-    # 4. Confirmar cambios
-    conexion.commit()
-    print("✅ Categoría agregada correctamente")
-
-finally:
-    # 5. Cerrar recursos
-    cursor.close()
-    conexion.close()</code></pre>
-
-        <div class="highlight" style="background: #e6f7e6; border-left-color: #10b981;">
-            🚀 <strong>Integración con Django</strong><br>
-            PyMySQL es clave en proyectos Django con MySQL: solo necesitas agregar <code>import pymysql; pymysql.install_as_MySQLdb()</code> en el <code>__init__.py</code> de tu proyecto y configurar el motor <code>django.db.backends.mysql</code>. Sin dolores de cabeza con compilaciones nativas.
+pymysql.version_info = (2, 2, 8, "final", 0)
+pymysql.install_as_MySQLdb()</code></pre>
+        <div class="image-placeholder">
+            📸 <span>media/image8.png</span> — Contenido final de __init__.py
         </div>
-
-        <h2>📊 Comparativa rápida</h2>
-        <div style="overflow-x: auto;">
-            <table style="width:100%; border-collapse: collapse; background: #f9fafb; border-radius: 1rem; margin: 1rem 0;">
-                <thead>
-                    <tr style="background: #e2e8f0;">
-                        <th style="padding: 0.75rem; text-align: left;">Característica</th>
-                        <th style="padding: 0.75rem; text-align: left;">PyMySQL</th>
-                        <th style="padding: 0.75rem; text-align: left;">mysqlclient (C)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr style="border-bottom: 1px solid #cbd5e1;">
-                        <td style="padding: 0.6rem;">Instalación</td>
-                        <td style="padding: 0.6rem;">✅ pip install, sin compiladores</td>
-                        <td style="padding: 0.6rem;">⚠️ Requiere herramientas C / MySQL dev</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #cbd5e1;">
-                        <td style="padding: 0.6rem;">Rendimiento bruto</td>
-                        <td style="padding: 0.6rem;">Muy bueno (puro Python)</td>
-                        <td style="padding: 0.6rem;">Excelente (ligeramente más rápido)</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #cbd5e1;">
-                        <td style="padding: 0.6rem;">Portabilidad</td>
-                        <td style="padding: 0.6rem;">Máxima (funciona en PyPy, Linux, Windows, Mac)</td>
-                        <td style="padding: 0.6rem;">Buena, pero depende de bibliotecas nativas</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 0.6rem;">Ideal para</td>
-                        <td style="padding: 0.6rem;">Entornos cloud, aprendizaje, despliegues rápidos</td>
-                        <td style="padding: 0.6rem;">Sistemas donde ya existe toolchain C</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="alert-info">
+            💡 <strong>Importante:</strong> Este paso permite que Django se comunique con MySQL usando PyMySQL.
         </div>
-
-        <h2>🧠 ¿Por qué elegir PyMySQL en tu próximo proyecto?</h2>
-        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
-            <li><strong>Simplicidad radical</strong>: no necesitas compilar drivers extraños.</li>
-            <li><strong>Comunidad activa</strong>: es mantenido y se actualiza con frecuencia.</li>
-            <li><strong>Perfecto para frameworks</strong>: se integra sin fricción con Django, Flask, FastAPI (usando SQLAlchemy o directo).</li>
-            <li><strong>Modo de depuración claro</strong>: al ser Python puro, los errores son más legibles.</li>
-        </ul>
-
-        <div class="highlight" style="background: #fff7ed; border-left-color: #f97316;">
-            🧑‍💻 <strong>Dato final</strong><br>
-            Si ya usas MySQL/MariaDB y quieres un conector que no complique tu entorno de desarrollo ni producción, PyMySQL es la opción más amigable y confiable. Además, es la base perfecta para entender cómo Python interactúa con motores SQL sin abstracciones innecesarias.
-        </div>
-
-        <footer>
-            🐍 PyMySQL · El puente definitivo entre Python y bases de datos relacionales · <span class="badge-mysql">MySQL</span> <span class="badge-mysql" style="background:#6b7280;">MariaDB</span> · Documentación oficial: <a href="https://github.com/PyMySQL/PyMySQL" target="_blank">github.com/PyMySQL/PyMySQL</a>
-        </footer>
     </div>
+    <div class="step"><strong>15.</strong> Configurar la conexión a MySQL en <span class="file-path">miweb/settings.py</span>. Reemplazar la configuración <code>DATABASES</code>:
+        <pre><code>DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'nombre_de_tu_bd',      # Cambiar por tu DB
+        'USER': 'root',                 # Usuario MySQL
+        'PASSWORD': 'tu_contraseña',    # Contraseña
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}</code></pre>
+        <div class="image-placeholder">
+            📸 <span>media/image9.png</span> — Fragmento de settings.py
+        </div>
+    </div>
+
+    <h2>📁 Creación de la App "logs" y modelos</h2>
+    <div class="step"><strong>16.</strong> Crear nueva app Django llamada <code>logs</code>:
+        <pre><code>python manage.py startapp logs</code></pre>
+        <div class="image-placeholder">
+            📸 <span>media/image10.png</span> — App logs creada
+        </div>
+    </div>
+    <div class="step"><strong>17.</strong> Registrar la app en <span class="file-path">miweb/settings.py</span> dentro de <code>INSTALLED_APPS</code>:
+        <pre><code>INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    ...
+    'logs',   # ← añadir esta línea
+]</code></pre>
+        <div class="image-placeholder">
+            📸 <span>media/image11.png</span> — Configuración INSTALLED_APPS
+        </div>
+    </div>
+
+    <div class="step"><strong>18.</strong> Definir los modelos en <span class="file-path">logs/models.py</span>. Copiar exactamente:
+        <pre><code>from django.db import models
+
+class USERS(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    apellido = models.CharField(max_length=100)
+    email = models.EmailField(unique=True, max_length=150)
+    clave = models.CharField(max_length=255)
+    rol = models.CharField(max_length=50)
+
+    class Meta:
+        db_table = 'USERS'
+
+class CATEGORIES(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        db_table = 'CATEGORIES'
+
+class TASK_LOGS(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(USERS, on_delete=models.CASCADE, db_column='user_id')
+    title = models.CharField(max_length=150)
+    description = models.CharField(max_length=255, blank=True, null=True)
+    log_date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    duration_minutes = models.IntegerField()
+    category = models.ForeignKey(CATEGORIES, on_delete=models.CASCADE, db_column='category_id')
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        db_table = 'TASK_LOGS'</code></pre>
+    </div>
+
+    <div class="step"><strong>19.</strong> Registrar modelos en el admin: editar <span class="file-path">logs/admin.py</span>:
+        <pre><code>from django.contrib import admin
+from .models import USERS, CATEGORIES, TASK_LOGS
+
+admin.site.register(USERS)
+admin.site.register(CATEGORIES)
+admin.site.register(TASK_LOGS)</code></pre>
+    </div>
+
+    <h2>🗄️ Migraciones y sincronización con MySQL</h2>
+    <div class="step"><strong>20.</strong> Crear migraciones iniciales para la app logs:
+        <pre><code>python manage.py makemigrations logs</code></pre>
+        <div class="image-placeholder">
+            📸 <span>media/image12.png</span> — Migraciones generadas
+        </div>
+    </div>
+    <div class="step"><strong>21.</strong> Aplicar migraciones (sincronizar tablas existentes sin perder datos si ya existen):
+        <pre><code>python manage.py migrate --fake-initial</code></pre>
+        <div class="image-placeholder">
+            📸 <span>media/image13.png</span> — Estado de las migraciones
+        </div>
+        <div class="alert-info">
+            🔁 <strong>--fake-initial</strong> permite que Django reconozca tablas ya creadas manualmente y no intente recrearlas.
+        </div>
+    </div>
+
+    <div class="step"><strong>22.</strong> Crear superusuario para acceder al panel administrativo:
+        <pre><code>python manage.py createsuperuser</code></pre>
+        <div class="image-placeholder">
+            📸 <span>media/image14.png</span> — Prompt: username, email, password
+        </div>
+    </div>
+
+    <div class="step"><strong>23.</strong> Iniciar servidor de desarrollo:
+        <pre><code>python manage.py runserver</code></pre>
+        <div class="image-placeholder">
+            📸 <span>media/image15.png</span> — Servidor corriendo en http://127.0.0.1:8000
+        </div>
+    </div>
+
+    <h2>📊 Visualización y ajustes avanzados</h2>
+    <div class="step"><strong>24.</strong> Acceder al admin: <code>http://127.0.0.1:8000/admin</code>. Si se ven datos correctamente, se mostrará algo como:
+        <div class="image-placeholder">
+            📸 <span>media/image16.png</span> — Panel con USERS, CATEGORIES, TASK_LOGS
+        </div>
+        <p>✔️ Si ya has agregado datos desde la interfaz, se verán listados.</p>
+    </div>
+
+    <div class="step"><strong>25.</strong> <strong>Mejora visual en el admin (Opcional pero recomendado):</strong> Agregar representación amigable (<code>__str__</code>) a los modelos. Agrega esto a cada clase en <strong>models.py</strong>:
+        <pre><code>class USERS(models.Model):
+    ...
+    def __str__(self):
+        return f"{self.name} {self.apellido} ({self.email})"
+
+class CATEGORIES(models.Model):
+    ...
+    def __str__(self):
+        return self.name
+
+class TASK_LOGS(models.Model):
+    ...
+    def __str__(self):
+        return f"{self.title} - {self.log_date}"</code></pre>
+        <div class="image-placeholder">
+            📸 <span>media/image17.png</span> — Implementación del método __str__ en clases.
+        </div>
+        <div class="alert-info">
+            🎨 Después de agregar los métodos __str__, se visualizarán nombres descriptivos en lugar de "Object (id)".
+        </div>
+    </div>
+
+    <hr>
+
+    <h2>📌 Resumen de verificación rápida</h2>
+    <ul style="margin-left: 1.8rem; margin-top: 0.5rem;">
+        <li>✅ Entorno virtual activado (venv)</li>
+        <li>✅ Django instalado y proyecto <code>miweb</code> creado</li>
+        <li>✅ PyMySQL instalado y configurado en <code>__init__.py</code></li>
+        <li>✅ Configuración de MySQL en <code>settings.py</code> (credenciales correctas)</li>
+        <li>✅ App <code>logs</code> registrada y modelos migrados</li>
+        <li>✅ Superusuario funcional y servidor corriendo</li>
+    </ul>
+
+    <div class="alert-info">
+        🧪 <strong>Probar la API o explorar</strong>: Crea algunos registros desde el admin en <strong>USERS</strong>, <strong>CATEGORIES</strong> y luego <strong>TASK_LOGS</strong>. Verifica las relaciones ForeignKey.
+    </div>
+
+    <h2>🐞 Posibles errores comunes</h2>
+    <ul style="margin-left: 1.8rem;">
+        <li><strong>❌ ModuleNotFoundError: No module named 'pymysql'</strong> → activa el entorno virtual y ejecuta <code>pip install pymysql</code> otra vez.</li>
+        <li><strong>❌ django.core.exceptions.ImproperlyConfigured: 'mysqlclient'</strong> → asegúrate de incluir <code>import pymysql; pymysql.install_as_MySQLdb()</code> en <code>miweb/__init__.py</code>.</li>
+        <li><strong>❌ Error de conexión a MySQL (2003, 1045)</strong> → revisa usuario, contraseña, y que MySQL esté corriendo (XAMPP, WAMP o servicio independiente).</li>
+        <li><strong>❌ Tablas ya existentes</strong> → usar <code>--fake-initial</code> o <code>python manage.py migrate --fake</code> si se requiere preservar datos.</li>
+    </ul>
+
+    <h2>🧰 Comandos finales útiles</h2>
+    <pre><code># Activar entorno (Windows)
+.\venv\Scripts\activate
+
+# Ejecutar servidor (dentro de carpeta miweb)
+python manage.py runserver
+
+# Crear nuevas migraciones después de modificar modelos
+python manage.py makemigrations
+python manage.py migrate</code></pre>
+
+    <footer>
+        📄 Guía basada en documento original "crearDjango.docx" — pasos validados para Django + MySQL con PyMySQL.<br>
+        🧪 Proyecto: USERS, CATEGORIES y TASK_LOGS | Panel administrativo configurado ✅
+    </footer>
 </div>
 </body>
 </html>
