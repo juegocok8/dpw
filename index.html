@@ -3,270 +3,339 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualizador de Código Atractivo</title>
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
-
+    <title>¿Qué es PyMySQL? El puente Python + MySQL</title>
     <style>
-        /* Estilos generales de la página */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #eef2f7; /* Un fondo gris azulado suave */
-            color: #333;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-
-        p.description {
-            margin-bottom: 30px;
-            color: #666;
-        }
-
-        /* Contenedor que simula una ventana de editor de código */
-        .code-window {
-            width: 90%;
-            max-width: 1000px;
-            border-radius: 8px;
-            overflow: hidden; /* Para que las esquinas redondeadas recorten el contenido */
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2); /* Sombra elegante */
-        }
-
-        /* Barra de título falsa del editor */
-        .window-header {
-            background-color: #1c1e26; /* Un poco más oscuro que el fondo de Prism */
-            color: #abb2bf;
-            padding: 8px 15px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-        }
-
-        /* Los tres puntitos de colores tipo Mac */
-        .dots {
-            display: flex;
-            gap: 6px;
-            margin-right: 15px;
-        }
-        .dot { width: 12px; height: 12px; border-radius: 50%; }
-        .dot-red { background-color: #ff5f56; }
-        .dot-yellow { background-color: #ffbd2e; }
-        .dot-green { background-color: #27c93f; }
-
-
-        /* Ajuste fino al bloque PRE de Prism */
-        /* 'pre[class*="language-"]' es como Prism selecciona su bloque */
-        pre[class*="language-"] {
-            margin: 0 !important; /* Quitamos el margen por defecto de Prism */
-            border-radius: 0 0 8px 8px !important; /* Redondeamos solo abajo */
-            max-height: 80vh; /* Altura máxima por si el código es eterno */
-        }
-
-        /* Ajuste para que el tamaño de fuente del código sea legible */
-        code[class*="language-"] {
-            font-size: 14px;
-            font-family: 'Fira Code', 'Consolas', monospace; /* Fuentes bonitas para código */
-            line-height: 1.5;
-        }
-
-    </style>
-</head>
-<body>
-
-<h1>Plantilla HTML5 + CSS Responsivo</h1>
-<p class="description">El siguiente código muestra una estructura de 3 columnas con cabecera y pie de página.</p>
-
-<div class="code-window">
-    <div class="window-header">
-        <div class="dots">
-            <div class="dot dot-red"></div>
-            <div class="dot dot-yellow"></div>
-            <div class="dot dot-green"></div>
-        </div>
-        <span>index.html (Vista de Código)</span>
-    </div>
-
-    <pre><code class="language-html">
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Creación de plantilla&lt;/title&gt;
-
-    &lt;style&gt;
-
-        /* ==================================================
-            CONFIGURACIÓN GENERAL
-            ================================================== */
-
-        /* Quitamos el margen por defecto que trae el navegador */
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        /* La propiedad box-sizing permite que el padding
-            no aumente el tamaño real del elemento */
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
 
-        /* ==================================================
-            ESTILO DEL ENCABEZADO
-            ================================================== */
+        body {
+            background: #eef2ff;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            padding: 2rem 1rem;
+            line-height: 1.5;
+            color: #0f172a;
+        }
 
-        /* Creamos el diseño visual del header */
+        .card {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
         .header {
-            background-color: #f1f1f1;   /* Color de fondo */
-            padding: 20px;               /* Espaciado interno */
-            text-align: center;          /* Centrar texto */
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            padding: 2rem 2rem 1.5rem;
+            color: white;
         }
 
-        /* ==================================================
-            ESTILO DEL MENÚ DE NAVEGACIÓN
-            ================================================== */
-
-        /* Contenedor principal del menú */
-        .topnav {
-            overflow: hidden;           /* Evita que los elementos flotantes se salgan */
-            background-color: #333;     /* Color de fondo oscuro */
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
-        /* Estilo de los enlaces dentro del menú */
-        .topnav a {
-            float: left;                /* Coloca los enlaces uno al lado del otro */
-            display: block;             /* Permite aplicar padding */
-            color: #f2f2f2;             /* Color del texto */
-            text-align: center;         /* Centrar texto */
-            padding: 14px 16px;         /* Espaciado interno */
-            text-decoration: none;      /* Quitar subrayado */
+        .header h1 span {
+            background: #3b82f6;
+            font-size: 1rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-weight: 500;
         }
 
-        /* Efecto cuando el mouse pasa sobre el enlace */
-        .topnav a:hover {
-            background-color: #ddd;     /* Cambia el fondo */
-            color: black;               /* Cambia el color del texto */
+        .header p {
+            margin-top: 0.8rem;
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            max-width: 85%;
         }
 
-        /* ==================================================
-            DISEÑO DE LAS COLUMNAS
-            ================================================== */
-
-        /* Clase base para todas las columnas */
-        .column {
-            float: left;    /* Hace que las columnas se coloquen horizontalmente */
-            padding: 10px;  /* Espaciado interno */
+        .content {
+            padding: 2rem 2rem 2.5rem;
         }
 
-        /* Columnas laterales (izquierda y derecha) */
-        .column.side {
-            width: 15%;     /* Ancho del 15% */
-            background-color: #f9f9f9;
+        .highlight {
+            background: #f0f9ff;
+            border-left: 5px solid #0ea5e9;
+            padding: 1.2rem 1.5rem;
+            border-radius: 1rem;
+            margin: 1.5rem 0;
+            font-weight: 500;
         }
 
-        /* Columna central (contenido principal) */
-        .column.middle {
-            width: 70%;     /* Ancho del 70% */
+        h2 {
+            font-size: 1.6rem;
+            margin-top: 1.8rem;
+            margin-bottom: 1rem;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        /* Limpiar el efecto float para que el footer
-            no se suba al lado de las columnas */
-        .row:after {
-            content: "";
-            display: table;
-            clear: both;
+        h2 i {
+            font-size: 1.8rem;
         }
 
-        /* ==================================================
-            DISEÑO RESPONSIVO
-            ================================================== */
+        h3 {
+            font-size: 1.25rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #1e293b;
+            border-left: 3px solid #38bdf8;
+            padding-left: 0.75rem;
+        }
 
-        /* Cuando la pantalla sea menor a 600px,
-            las columnas ocuparán el 100% del ancho
-            y se mostrarán una debajo de otra */
-        @media screen and (max-width: 600px) {
-            .column {
-                width: 100%;
+        .feature-grid {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: #f8fafc;
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            flex: 1;
+            min-width: 200px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+
+        .feature-card strong {
+            color: #0284c7;
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        code, .inline-code {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-family: 'Fira Code', 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        pre {
+            background: #0f172a;
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+            color: #f1f5f9;
+            box-shadow: inset 0 0 0 1px #334155;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: inherit;
+        }
+
+        .flow-steps {
+            background: #fefce8;
+            border: 1px solid #fde047;
+            border-radius: 1.2rem;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .flow-steps ol {
+            margin-left: 1.2rem;
+            margin-top: 0.5rem;
+        }
+
+        .flow-steps li {
+            margin: 0.6rem 0;
+        }
+
+        .badge-mysql {
+            background: #00758f;
+            color: white;
+            padding: 0.15rem 0.7rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        footer {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.8rem;
+            color: #475569;
+            text-align: center;
+        }
+
+        @media (max-width: 700px) {
+            .content {
+                padding: 1.2rem;
+            }
+            .header h1 {
+                font-size: 1.6rem;
+            }
+            .header p {
+                font-size: 0.95rem;
             }
         }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="header">
+        <h1>
+            🐬 PyMySQL
+            <span>conector en Python puro</span>
+        </h1>
+        <p>El puente que permite que tu código Python hable con MySQL / MariaDB: guardar, consultar, actualizar y borrar datos.</p>
+    </div>
+    <div class="content">
+        <div class="highlight">
+            💡 <strong>¿Qué es PyMySQL en términos simples?</strong><br>
+            Es una librería de Python que funciona como un <strong>cliente</strong> o <strong>conector</strong> para interactuar con bases de datos MySQL y MariaDB.
+            Actúa como un intérprete que traduce las órdenes de Python a consultas SQL y viceversa.
+        </div>
 
-        /* ==================================================
-            PIE DE PÁGINA
-            ================================================== */
+        <h2>✨ ¿Qué lo hace especial?</h2>
+        <p>A diferencia de otros conectores como <code class="inline-code">mysql-connector-python</code>, <strong>PyMySQL</strong> destaca por ser <strong>100% Python puro</strong>. Esto trae ventajas clave:</p>
 
-        .footer {
-            background-color: #f1f1f1;  /* Color de fondo */
-            padding: 10px;              /* Espaciado interno */
-            text-align: center;         /* Centrar texto */
-        }
+        <div class="feature-grid">
+            <div class="feature-card">
+                <strong>🧩 Sin dependencias externas</strong>
+                No necesitas instalar bibliotecas de C en tu sistema ni lidiar con configuraciones complejas de compilación. Basta con un <code class="inline-code">pip install PyMySQL</code>.
+            </div>
+            <div class="feature-card">
+                <strong>⚡ Compatible con PyPy</strong>
+                Funciona perfectamente con PyPy, ideal si buscas un rendimiento optimizado en entornos que no usan CPython (el intérprete estándar).
+            </div>
+            <div class="feature-card">
+                <strong>🔄 Soporte moderno</strong>
+                Compatible con la mayoría de versiones de MySQL (5.x, 8.x) y MariaDB, manteniéndose actualizado.
+            </div>
+        </div>
 
-    &lt;/style&gt;
-&lt;/head&gt;
+        <h2>🔁 ¿Cómo funciona el flujo típico?</h2>
+        <p>Usar PyMySQL sigue un patrón bastante claro y universal. Estos son los pasos fundamentales:</p>
 
-&lt;body&gt;
+        <div class="flow-steps">
+            <ol>
+                <li><strong>📡 Establecer conexión</strong> — Proporcionas el host, usuario, contraseña, puerto y nombre de la base de datos.</li>
+                <li><strong>🎯 Crear un Cursor</strong> — El cursor es el objeto que te permite ejecutar sentencias SQL y recorrer los resultados.</li>
+                <li><strong>📝 Ejecutar SQL</strong> — Envías comandos como <code class="inline-code">SELECT</code>, <code class="inline-code">INSERT</code>, <code class="inline-code">UPDATE</code> o <code class="inline-code">DELETE</code>.</li>
+                <li><strong>💾 Hacer Commit</strong> — Si cambias datos (INSERT, UPDATE, DELETE), debes confirmar la acción usando <code class="inline-code">commit()</code>.</li>
+                <li><strong>🔌 Cerrar</strong> — Siempre es buena práctica cerrar el cursor y la conexión para liberar recursos.</li>
+            </ol>
+        </div>
 
-    &lt;div class="header"&gt;
-        &lt;h1&gt;Práctica CSS&lt;/h1&gt;
-        &lt;p&gt;Plantilla Web Profesional&lt;/p&gt;
-    &lt;/div&gt;
+        <h3>🧪 Ejemplo mínimo de código</h3>
+        <pre><code>import pymysql
 
+# 1. Establecer conexión
+conexion = pymysql.connect(
+    host='localhost',
+    user='root',
+    password='tu_contraseña',
+    database='mi_bd',
+    port=3306
+)
 
-    &lt;div class="topnav"&gt;
-        &lt;a href="#"&gt;INICIO&lt;/a&gt;
-        &lt;a href="#"&gt;MISION&lt;/a&gt;
-        &lt;a href="#"&gt;VISION&lt;/a&gt;
-        &lt;a href="#"&gt;CONTACTO&lt;/a&gt;
-    &lt;/div&gt;
+try:
+    # 2. Crear cursor
+    cursor = conexion.cursor()
 
+    # 3. Ejecutar SQL
+    sql = "SELECT nombre, email FROM USERS WHERE rol = 'admin'"
+    cursor.execute(sql)
 
-    &lt;div class="row"&gt;
+    # Obtener resultados
+    for (nombre, email) in cursor:
+        print(f"Admin: {nombre} - {email}")
 
-        &lt;div class="column side"&gt;
-            &lt;h2&gt;Columna 1&lt;/h2&gt;
-            &lt;p&gt;
-                Esta columna puede utilizarse como menú secundario,
-                enlaces importantes o información adicional.
-            &lt;/p&gt;
-        &lt;/div&gt;
+    # Ejemplo de INSERT con commit
+    insert_sql = "INSERT INTO CATEGORIES (name, created_at) VALUES ('Trabajo', NOW())"
+    cursor.execute(insert_sql)
+    # 4. Confirmar cambios
+    conexion.commit()
+    print("✅ Categoría agregada correctamente")
 
-        &lt;div class="column middle"&gt;
-            &lt;h2&gt;Columna Principal&lt;/h2&gt;
-            &lt;p&gt;
-                Aquí se coloca el contenido más importante del sitio web.
-                Es el área principal que ocupa mayor espacio.
-            &lt;/p&gt;
-            &lt;p&gt;
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Vivamus venenatis velit nec neque ultricies.
-            &lt;/p&gt;
-        &lt;/div&gt;
+finally:
+    # 5. Cerrar recursos
+    cursor.close()
+    conexion.close()</code></pre>
 
-        &lt;div class="column side"&gt;
-            &lt;h2&gt;Columna 3&lt;/h2&gt;
-            &lt;p&gt;
-                Espacio para anuncios, noticias o información adicional.
-            &lt;/p&gt;
-        &lt;/div&gt;
+        <div class="highlight" style="background: #e6f7e6; border-left-color: #10b981;">
+            🚀 <strong>Integración con Django</strong><br>
+            PyMySQL es clave en proyectos Django con MySQL: solo necesitas agregar <code>import pymysql; pymysql.install_as_MySQLdb()</code> en el <code>__init__.py</code> de tu proyecto y configurar el motor <code>django.db.backends.mysql</code>. Sin dolores de cabeza con compilaciones nativas.
+        </div>
 
-    &lt;/div&gt;
+        <h2>📊 Comparativa rápida</h2>
+        <div style="overflow-x: auto;">
+            <table style="width:100%; border-collapse: collapse; background: #f9fafb; border-radius: 1rem; margin: 1rem 0;">
+                <thead>
+                    <tr style="background: #e2e8f0;">
+                        <th style="padding: 0.75rem; text-align: left;">Característica</th>
+                        <th style="padding: 0.75rem; text-align: left;">PyMySQL</th>
+                        <th style="padding: 0.75rem; text-align: left;">mysqlclient (C)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid #cbd5e1;">
+                        <td style="padding: 0.6rem;">Instalación</td>
+                        <td style="padding: 0.6rem;">✅ pip install, sin compiladores</td>
+                        <td style="padding: 0.6rem;">⚠️ Requiere herramientas C / MySQL dev</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #cbd5e1;">
+                        <td style="padding: 0.6rem;">Rendimiento bruto</td>
+                        <td style="padding: 0.6rem;">Muy bueno (puro Python)</td>
+                        <td style="padding: 0.6rem;">Excelente (ligeramente más rápido)</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #cbd5e1;">
+                        <td style="padding: 0.6rem;">Portabilidad</td>
+                        <td style="padding: 0.6rem;">Máxima (funciona en PyPy, Linux, Windows, Mac)</td>
+                        <td style="padding: 0.6rem;">Buena, pero depende de bibliotecas nativas</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.6rem;">Ideal para</td>
+                        <td style="padding: 0.6rem;">Entornos cloud, aprendizaje, despliegues rápidos</td>
+                        <td style="padding: 0.6rem;">Sistemas donde ya existe toolchain C</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
+        <h2>🧠 ¿Por qué elegir PyMySQL en tu próximo proyecto?</h2>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+            <li><strong>Simplicidad radical</strong>: no necesitas compilar drivers extraños.</li>
+            <li><strong>Comunidad activa</strong>: es mantenido y se actualiza con frecuencia.</li>
+            <li><strong>Perfecto para frameworks</strong>: se integra sin fricción con Django, Flask, FastAPI (usando SQLAlchemy o directo).</li>
+            <li><strong>Modo de depuración claro</strong>: al ser Python puro, los errores son más legibles.</li>
+        </ul>
 
-    &lt;div class="footer"&gt;
-        &lt;p&gt;© 2026 - Diseño Web con CSS | Práctica 5&lt;/p&gt;
-    &lt;/div&gt;
+        <div class="highlight" style="background: #fff7ed; border-left-color: #f97316;">
+            🧑‍💻 <strong>Dato final</strong><br>
+            Si ya usas MySQL/MariaDB y quieres un conector que no complique tu entorno de desarrollo ni producción, PyMySQL es la opción más amigable y confiable. Además, es la base perfecta para entender cómo Python interactúa con motores SQL sin abstracciones innecesarias.
+        </div>
 
-&lt;/body&gt;
-&lt;/html&gt;
-        </code></pre>
+        <footer>
+            🐍 PyMySQL · El puente definitivo entre Python y bases de datos relacionales · <span class="badge-mysql">MySQL</span> <span class="badge-mysql" style="background:#6b7280;">MariaDB</span> · Documentación oficial: <a href="https://github.com/PyMySQL/PyMySQL" target="_blank">github.com/PyMySQL/PyMySQL</a>
+        </footer>
+    </div>
 </div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-
 </body>
 </html>
