@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Django CRUD | Categorías (Modelo CATEGORIES) - Guía completa</title>
+    <!-- Fuentes modernas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f1f5f9;
+            font-family: 'Inter', sans-serif;
+            color: #0a0c10;
+            line-height: 1.5;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0f2b3d, #1e4a6e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.01em;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-badge {
+            background: #e2e8f0;
+            color: #1e293b;
+            display: inline-block;
+            padding: 0.25rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        .hero-badge i {
+            margin-right: 6px;
+            color: #2c6e9e;
+        }
+
+        .sub {
+            color: #334155;
+            margin-top: 0.75rem;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .grid-docs {
+            display: grid;
+            /*grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));*/
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.02);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            overflow: hidden;
+            border: 1px solid #eef2f6;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 32px -16px rgba(0, 32, 64, 0.12);
+            border-color: #cbdde9;
+        }
+
+        .card-header {
+            background: #f8fafc;
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid #e9edf2;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header i {
+            font-size: 1.6rem;
+            color: #2c6e9e;
+        }
+
+        .card-header h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #0f172a;
+            letter-spacing: -0.2px;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .code-block {
+            background: #0f172a;
+            color: #e2e8f0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            border-radius: 1rem;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+            line-height: 1.5;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .inline-code {
+            background: #eef2ff;
+            color: #1e40af;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 8px;
+        }
+
+        .path {
+            font-family: monospace;
+            background: #eef2ff;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            display: inline-block;
+            font-weight: 500;
+        }
+
+        .endpoint {
+            background: #0f172a;
+            color: #a5f3c3;
+            font-family: monospace;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            display: inline-block;
+        }
+
+        hr {
+            margin: 1rem 0;
+            border: none;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .tag {
+            background: #dbeafe;
+            color: #1e3a8a;
+            border-radius: 20px;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .summary-grid {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            padding: 1.8rem;
+            margin-top: 1rem;
+            border: 1px solid #e2edf2;
+        }
+
+        .table-preview {
+            background: #f8fafc;
+            border-radius: 1rem;
+            overflow-x: auto;
+            padding: 0.5rem;
+        }
+
+        .table-preview table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .table-preview th, .table-preview td {
+            border: 1px solid #cbd5e1;
+            padding: 0.6rem;
+            text-align: left;
+        }
+
+        .table-preview th {
+            background: #e2e8f0;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 0.85rem;
+            color: #5b6e8c;
+            border-top: 1px solid #dce5ec;
+            padding-top: 2rem;
+        }
+
+        @media (max-width: 700px) {
+            .hero h1 {
+                font-size: 1.9rem;
+            }
+            .card-header h2 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1><i class="fas fa-database" style="color: #2c6e9e;"></i> CRUD de Categorías en Django</h1>
+        <div class="hero-badge"><i class="fas fa-table"></i> Modelo CATEGORIES · Operaciones completas (Crear, Leer, Actualizar, Eliminar)</div>
+        <div class="sub">CRUD profesional con Class-Based Views. Sin usar el admin, implementación limpia y personalizada.</div>
+    </div>
+
+    <!-- Grid principal -->
+    <div class="grid-docs">
+        <!-- Modelo -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-cube"></i>
+                <h2>📦 Modelo CATEGORIES</h2>
+            </div>
+            <div class="card-body">
+                <p><span class="path">logs/models.py</span></p>
+                <div class="code-block">
+                    from django.db import models<br><br>
+                    class CATEGORIES(models.Model):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;id = models.AutoField(primary_key=True)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;name = models.CharField(max_length=100)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;created_at = models.DateTimeField(auto_now_add=True)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;updated_at = models.DateTimeField(auto_now=True)<br><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;class Meta:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db_table = 'CATEGORIES'<br><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;def __str__(self):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return self.name
+                </div>
+                <p><span class="tag"><i class="fas fa-clock"></i> Auto timestamps</span> <span class="tag"><i class="fas fa-table"></i> Nombre personalizado en BD</span></p>
+            </div>
+        </div>
+
+        <!-- Vistas CRUD (Class Based Views) -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-eye"></i>
+                <h2>🎯 Vistas CRUD (CBV)</h2>
+            </div>
+            <div class="card-body">
+                <p><span class="path">logs/views.py</span> con vistas genéricas:</p>
+                <div class="code-block">
+                    from django.views.generic import ListView, CreateView, UpdateView, DeleteView<br>
+                    from django.urls import reverse_lazy<br>
+                    from .models import CATEGORIES<br><br>
+                    class CategoryList(ListView):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;model = CATEGORIES<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;template_name = 'logs/categories_list.html'<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;context_object_name = 'categories'<br><br>
+                    class CategoryCreate(CreateView):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;model = CATEGORIES<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;fields = ['name']<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;template_name = 'logs/categories_form.html'<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;success_url = reverse_lazy('categories_list')<br><br>
+                    class CategoryUpdate(UpdateView):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;model = CATEGORIES<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;fields = ['name']<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;template_name = 'logs/categories_form.html'<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;success_url = reverse_lazy('categories_list')<br><br>
+                    class CategoryDelete(DeleteView):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;model = CATEGORIES<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;template_name = 'logs/categories_delete.html'<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;success_url = reverse_lazy('categories_list')
+                </div>
+                <p><i class="fas fa-gem"></i> <strong>Ventaja:</strong> código mínimo, máximo control.</p>
+            </div>
+        </div>
+
+        <!-- URLs -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-link"></i>
+                <h2>🔗 Configuración de URLs</h2>
+            </div>
+            <div class="card-body">
+                <p><span class="path">logs/urls.py</span> → patrones RESTful:</p>
+                <div class="code-block">
+                    from django.urls import path<br>
+                    from .views import *<br><br>
+                    urlpatterns = [<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;path('categorias/', CategoryList.as_view(), name='categories_list'),<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;path('categorias/nueva/', CategoryCreate.as_view(), name='categories_create'),<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;path('categorias/&lt;int:pk&gt;/editar/', CategoryUpdate.as_view(), name='categories_update'),<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;path('categorias/&lt;int:pk&gt;/eliminar/', CategoryDelete.as_view(), name='categories_delete'),<br>
+                    ]
+                </div>
+                <div style="margin-top: 10px;">
+                    <span class="endpoint"><i class="fas fa-list"></i> GET /categorias/</span>
+                    <span class="endpoint"><i class="fas fa-plus"></i> GET/POST /categorias/nueva/</span>
+                    <span class="endpoint"><i class="fas fa-edit"></i> GET/POST /categorias/&lt;id&gt;/editar/</span>
+                    <span class="endpoint"><i class="fas fa-trash"></i> GET/POST /categorias/&lt;id&gt;/eliminar/</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Plantillas completas (3 en grid) -->
+    <div class="grid-docs">
+        <!-- Lista -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-table-list"></i>
+                <h2>📋 Lista (categories_list.html)</h2>
+            </div>
+            <div class="card-body">
+                <div class="code-block">
+                    &lt;h1&gt;Categorías&lt;/h1&gt;<br><br>
+                    &lt;a href="{% url 'categories_create' %}"&gt;➕ Nueva categoría&lt;/a&gt;<br><br>
+                    &lt;table border="1"&gt;<br>
+                    &nbsp;&nbsp;&lt;tr&gt;&lt;th&gt;ID&lt;/th&gt;&lt;th&gt;Nombre&lt;/th&gt;&lt;th&gt;Acciones&lt;/th&gt;&lt;/tr&gt;<br>
+                    &nbsp;&nbsp;{% for c in categories %}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;tr&gt;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;{{ c.id }}&lt;/td&gt;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;{{ c.name }}&lt;/td&gt;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;a href="{% url 'categories_update' c.id %}"&gt;✏️ Editar&lt;/a&gt;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;a href="{% url 'categories_delete' c.id %}"&gt;🗑️ Eliminar&lt;/a&gt;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/td&gt;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;/tr&gt;<br>
+                    &nbsp;&nbsp;{% endfor %}<br>
+                    &lt;/table&gt;
+                </div>
+                <p><span class="tag"><i class="fas fa-eye"></i> Vista principal</span> Muestra todas las categorías con acciones.</p>
+            </div>
+        </div>
+
+        <!-- Formulario (Create/Update) -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-pen-to-square"></i>
+                <h2>📝 Formulario (categories_form.html)</h2>
+            </div>
+            <div class="card-body">
+                <div class="code-block">
+                    &lt;h1&gt;{% if object %}Editar{% else %}Nueva{% endif %} Categoría&lt;/h1&gt;<br><br>
+                    &lt;form method="post"&gt;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;{% csrf_token %}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;{{ form.as_p }}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;button type="submit"&gt;💾 Guardar&lt;/button&gt;<br>
+                    &lt;/form&gt;<br><br>
+                    &lt;a href="{% url 'categories_list' %}"&gt;← Volver&lt;/a&gt;
+                </div>
+                <p><i class="fas fa-rotate-left"></i> Reutilizable para crear y editar (mismo template).</p>
+            </div>
+        </div>
+
+        <!-- Confirmar eliminar -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-trash-can"></i>
+                <h2>⚠️ Eliminar (categories_delete.html)</h2>
+            </div>
+            <div class="card-body">
+                <div class="code-block">
+                    &lt;h1&gt;¿Eliminar categoría?&lt;/h1&gt;<br>
+                    &lt;p&gt;&lt;strong&gt;{{ object.name }}&lt;/strong&gt; (ID: {{ object.id }})&lt;/p&gt;<br><br>
+                    &lt;form method="post"&gt;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;{% csrf_token %}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;button type="submit"&gt;✅ Sí, eliminar&lt;/button&gt;<br>
+                    &lt;/form&gt;<br>
+                    &lt;a href="{% url 'categories_list' %}"&gt;❌ Cancelar&lt;/a&gt;
+                </div>
+                <p><span class="tag"><i class="fas fa-shield-alt"></i> Confirmación antes de borrar</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estructura de carpetas + jerarquía -->
+    <div class="card" style="margin-bottom: 2rem;">
+        <div class="card-header">
+            <i class="fas fa-folder-tree"></i>
+            <h2>📂 Estructura de carpetas (templates)</h2>
+        </div>
+        <div class="card-body">
+            <div class="code-block">
+                logs/<br>
+                ├── models.py<br>
+                ├── views.py<br>
+                ├── urls.py<br>
+                └── templates/<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;└── logs/<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── categories_list.html<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── categories_form.html<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── categories_delete.html
+            </div>
+            <p><i class="fas fa-check-circle" style="color:#15803d;"></i> <strong>Convención:</strong> anidar templates en subcarpeta <span class="inline-code">logs/</span> para evitar conflictos con otras apps.</p>
+        </div>
+    </div>
+
+    <!-- Tabla de endpoints y funciones -->
+    <div class="summary-grid">
+        <h3 style="margin-bottom: 1rem;"><i class="fas fa-laptop-code"></i> 🚀 Endpoints del CRUD</h3>
+        <div class="table-preview">
+            <table>
+                <thead>
+                    <tr><th>URL</th><th>Vista (CBV)</th><th>Método</th><th>Descripción</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><span class="inline-code">/categorias/</span></td><td>CategoryList</td><td>GET</td><td>Listar todas las categorías</td></tr>
+                    <tr><td><span class="inline-code">/categorias/nueva/</span></td><td>CategoryCreate</td><td>GET / POST</td><td>Formulario para nueva categoría</td></tr>
+                    <tr><td><span class="inline-code">/categorias/&lt;id&gt;/editar/</span></td><td>CategoryUpdate</td><td>GET / POST</td><td>Editar categoría existente</td></tr>
+                    <tr><td><span class="inline-code">/categorias/&lt;id&gt;/eliminar/</span></td><td>CategoryDelete</td><td>GET / POST</td><td>Confirmar y eliminar categoría</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+        <div style="background: #eef2ff; border-radius: 1rem; padding: 0.8rem; margin-top: 1rem;">
+            <i class="fas fa-lightbulb"></i> <strong>Notas importantes:</strong>
+            <ul style="margin-left: 1.5rem; margin-top: 0.4rem;">
+                <li>✅ No usa el admin de Django → CRUD 100% personalizado y portable.</li>
+                <li>🎨 Puedes aplicar estilos fácilmente (Bootstrap, Tailwind, CSS custom).</li>
+                <li>⚡ Las vistas genéricas reducen drásticamente el código repetitivo.</li>
+                <li>🔐 CSRF protegido por defecto en formularios POST.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Comparativa / Equivalencia con otros frameworks -->
+    <div class="card" style="margin-top: 1.5rem;">
+        <div class="card-header">
+            <i class="fas fa-chart-simple"></i>
+            <h2>📊 Ventajas del enfoque Django Class-Based Views</h2>
+        </div>
+        <div class="card-body">
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                <div style="flex:1; background:#f1f5f9; border-radius: 1rem; padding: 1rem;">
+                    <i class="fas fa-code"></i> <strong>Código mínimo</strong><br>
+                    <span style="font-size: 0.85rem;">Cada operación CRUD en ~5 líneas. Comparado con 20+ líneas en vistas basadas en funciones.</span>
+                </div>
+                <div style="flex:1; background:#f1f5f9; border-radius: 1rem; padding: 1rem;">
+                    <i class="fas fa-puzzle-piece"></i> <strong>Reutilizable</strong><br>
+                    <span style="font-size: 0.85rem;">Las CBV heredan comportamientos, se pueden extender con mixins fácilmente.</span>
+                </div>
+                <div style="flex:1; background:#f1f5f9; border-radius: 1rem; padding: 1rem;">
+                    <i class="fas fa-rocket"></i> <strong>Rapidez de desarrollo</strong><br>
+                    <span style="font-size: 0.85rem;">En minutos tienes un CRUD funcional validado, ideal para prototipos y proyectos reales.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview de ejecución / resultado -->
+    <div class="summary-grid" style="margin-top: 1rem;">
+        <p><i class="fas fa-check-circle" style="color:#15803d;"></i> <strong>Resultado final:</strong> Una aplicación de gestión de categorías completamente funcional, con operaciones <strong>crear, leer, actualizar y eliminar</strong>, lista para integrar estilos y lógica adicional. Es equivalente a un CRUD en otros frameworks (Laravel, Rails, etc.), pero aprovechando la automatización y seguridad de Django.</p>
+        <div style="margin-top: 0.8rem;">
+            <span class="tag"><i class="fab fa-python"></i> Django ORM</span>
+            <span class="tag"><i class="fas fa-database"></i> Tabla CATEGORIES</span>
+            <span class="tag"><i class="fas fa-mobile-alt"></i> Responsive ready</span>
+        </div>
+    </div>
+
+    <footer>
+        <i class="fab fa-django"></i> CRUD Categorías (Modelo CATEGORIES) — Django Class-Based Views • Código limpio y escalable<br>
+        Arquitectura: Modelo → Vistas → URLs → Plantillas | Sin admin, CRUD completo.
+    </footer>
+</div>
+</body>
+</html>

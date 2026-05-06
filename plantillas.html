@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Django DRY: Herencia de Plantillas | Guía definitiva</title>
+    <!-- Fuentes modernas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f1f5f9;
+            font-family: 'Inter', sans-serif;
+            color: #0a0c10;
+            line-height: 1.5;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0f2b3d, #1e4a6e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.01em;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-badge {
+            background: #e2e8f0;
+            color: #1e293b;
+            display: inline-block;
+            padding: 0.25rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            backdrop-filter: blur(4px);
+            margin-top: 0.5rem;
+        }
+
+        .hero-badge i {
+            margin-right: 6px;
+            color: #2c6e9e;
+        }
+
+        .sub {
+            color: #334155;
+            margin-top: 0.75rem;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .grid-docs {
+            display: grid;
+            /*grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));*/
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.02);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            overflow: hidden;
+            border: 1px solid #eef2f6;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 32px -16px rgba(0, 32, 64, 0.12);
+            border-color: #cbdde9;
+        }
+
+        .card-header {
+            background: #f8fafc;
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid #e9edf2;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header i {
+            font-size: 1.6rem;
+            color: #2c6e9e;
+        }
+
+        .card-header h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #0f172a;
+            letter-spacing: -0.2px;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .code-block {
+            background: #0f172a;
+            color: #e2e8f0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            border-radius: 1rem;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+            line-height: 1.5;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .inline-code {
+            background: #eef2ff;
+            color: #1e40af;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 8px;
+        }
+
+        .path {
+            font-family: monospace;
+            background: #eef2ff;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            display: inline-block;
+            font-weight: 500;
+        }
+
+        .list-structure {
+            background: #f1f5f9;
+            border-radius: 1rem;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+        }
+
+        hr {
+            margin: 1rem 0;
+            border: none;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .tag {
+            background: #dbeafe;
+            color: #1e3a8a;
+            border-radius: 20px;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .summary-grid {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            padding: 1.8rem;
+            margin-top: 1rem;
+            border: 1px solid #e2edf2;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .img-placeholder {
+            background: #eef2ff;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 1.2rem;
+            margin: 1rem 0;
+            border: 1px dashed #94a3b8;
+            font-family: monospace;
+            color: #1e293b;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 0.85rem;
+            color: #5b6e8c;
+            border-top: 1px solid #dce5ec;
+            padding-top: 2rem;
+        }
+
+        @media (max-width: 700px) {
+            .hero h1 {
+                font-size: 1.9rem;
+            }
+            .card-header h2 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1><i class="fas fa-code-branch" style="color: #2c6e9e;"></i> Herencia de Plantillas en Django <span style="background: #e2e8f0; font-size: 1.4rem; padding: 0 0.5rem; border-radius: 30px;">(DRY)</span></h1>
+        <div class="hero-badge"><i class="fas fa-balance-scale"></i> Don't Repeat Yourself · Reutilización avanzada</div>
+        <div class="sub">Base inteligente → Plantillas hijas limpias y modulares. Ahorra cientos de líneas de código repetitivo.</div>
+    </div>
+
+    <!-- Cuadrícula principal: concepto + estructura + base/hija -->
+    <div class="grid-docs">
+        <!-- ¿Qué es la herencia? -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-question-circle"></i>
+                <h2>🧬 ¿Qué es la herencia?</h2>
+            </div>
+            <div class="card-body">
+                <p>La herencia de plantillas permite <strong>reutilizar código HTML</strong> en varias páginas, evitando repetir estructuras como encabezados, menús o pies de página.</p>
+                <div class="list-structure">
+                    <i class="fas fa-crown"></i> <strong>Plantilla base (padre)</strong> → estructura común<br>
+                    <i class="fas fa-child"></i> <strong>Plantillas hijas</strong> → extienden y personalizan bloques
+                </div>
+                <p><span class="tag"><i class="fas fa-gem"></i> DRY Principle</span> Escribe una vez, hereda en todas partes.</p>
+            </div>
+        </div>
+
+        <!-- Estructura recomendada -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-folder-open"></i>
+                <h2>📁 Estructura recomendada</h2>
+            </div>
+            <div class="card-body">
+                <p>Dentro de tu aplicación <strong>logs/</strong>:</p>
+                <div class="code-block">
+                    📁logs/<br>
+                    └── 📁templates/<br>
+                        └── 📁logs/<br>
+                            ├── base.html<br>
+                            └── inicio.html
+                </div>
+                <p><i class="fas fa-info-circle"></i> <strong>Buenas prácticas:</strong> anidar en subcarpeta con nombre de la app evita conflictos entre templates.</p>
+            </div>
+        </div>
+
+        <!-- Plantilla base (base.html) completa -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-database"></i>
+                <h2>🏛️ Plantilla base (base.html)</h2>
+            </div>
+            <div class="card-body">
+                <p>Define la estructura global, headers, footer y bloques editables.</p>
+                <div class="code-block">
+                    &lt;!DOCTYPE html&gt;
+                    &lt;html lang="en"&gt;
+                    &lt;head&gt;
+                    &nbsp;&nbsp;&lt;meta charset="UTF-8"&gt;
+                    &nbsp;&nbsp;&lt;title&gt;Document&lt;/title&gt;
+                    &lt;/head&gt;
+                    &lt;body&gt;
+                    &nbsp;&nbsp;&lt;header&gt;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;h1&gt;Bienvenido a mi pagina web&lt;br&gt; !!!!Texto de la plantilla Base¡¡¡¡¡&lt;/h1&gt;
+                    &nbsp;&nbsp;&lt;/header&gt;
+                    &nbsp;&nbsp;&lt;main&gt;
+                    &nbsp;&nbsp;&nbsp;&nbsp;{% block contenido %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;{% endblock %}
+                    &nbsp;&nbsp;&lt;/main&gt;
+                    &nbsp;&nbsp;&lt;footer&gt;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;{{ autor }}&lt;/p&gt;
+                    &nbsp;&nbsp;&lt;/footer&gt;
+                    &lt;/body&gt;
+                    &lt;/html&gt;
+                </div>
+                <p><span class="tag">block contenido</span> → punto de inyección para páginas hijas.</p>
+            </div>
+        </div>
+
+        <!-- Plantilla hija (inicio.html) -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-child"></i>
+                <h2>🌱 Plantilla hija (inicio.html)</h2>
+            </div>
+            <div class="card-body">
+                <p>Extiende la base y rellena solo el contenido variable.</p>
+                <div class="code-block">
+                    {% extends 'logs/base.html' %}<br><br>
+                    {% block contenido %}<br>
+                    &lt;p&gt;<br>
+                    &lt;h1&gt;Contenido dinámico plantilla dependiente&lt;/h1&gt;<br>
+                    &lt;/p&gt;<br>
+                    {% endblock %}
+                </div>
+                <p><i class="fas fa-arrow-right"></i> <strong>La ruta en <span class="inline-code">{% extends %}</span> respeta la estructura de carpetas</strong> → <span class="inline-code">logs/base.html</span>.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección: Vistas y URLs (integrado) -->
+    <div class="card" style="margin-bottom: 2rem;">
+        <div class="card-header">
+            <i class="fas fa-code"></i>
+            <h2>⚙️ Uso desde las vistas y configuración de URLs</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>📄 logs/views.py</strong> → ambas rutas apuntan a la misma plantilla hija</p>
+            <div class="code-block">
+                from django.shortcuts import render<br><br>
+                def inicio(request):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;return render(request, 'logs/inicio.html')<br><br>
+                def contenido(request):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;return render(request, 'logs/inicio.html')
+            </div>
+            <p><strong>🌐 miweb/urls.py</strong> (patrones de URL incluidos)</p>
+            <div class="code-block">
+                urlpatterns = [<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;path('panel/', admin.site.urls),<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;path('', include('logs.urls')),<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;path('contenido/', include('logs.urls')),<br>
+                ]
+            </div>
+            <p><i class="fas fa-lightbulb"></i> Nota: ambas vistas renderizan <em>inicio.html</em> que hereda de la base, demostrando flexibilidad.</p>
+        </div>
+    </div>
+
+    <!-- Resultado visual + imagen simulada (img02.png) -->
+    <div class="card" style="margin-bottom: 2rem;">
+        <div class="card-header">
+            <i class="fas fa-image"></i>
+            <h2>🖼️ Resultado esperado</h2>
+        </div>
+        <div class="card-body">
+            <p>Al cargar la página, se visualiza la combinación de la plantilla base + bloque contenido de la hija:</p>
+            <div class="img-placeholder">
+                <i class="fas fa-file-image fa-2x" style="color:#3b82f6;"></i>
+                <span><strong>img02.png</strong> — Vista renderizada con herencia activa</span>
+                <i class="fas fa-eye" style="color:#3b82f6;"></i>
+            </div>
+            <div style="background:#fef9e3; border-left: 4px solid #f5b042; padding: 0.8rem 1rem; border-radius: 16px; margin-top: 0.5rem;">
+                <i class="fas fa-desktop"></i> <strong>Salida visual:</strong> Encabezado desde <strong>base.html</strong> + “Contenido dinámico plantilla dependiente” desde <strong>inicio.html</strong> + footer mostrando variable <strong>{{autor}}</strong> (puede pasarse desde contexto).
+            </div>
+        </div>
+    </div>
+
+    <!-- Reglas importantes + alternativas opcionales -->
+    <div class="grid-docs">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h2>📌 Reglas importantes</h2>
+            </div>
+            <div class="card-body">
+                <ul style="margin-left: 1.2rem; display: flex; flex-direction: column; gap: 0.6rem;">
+                    <li><i class="fas fa-check-circle" style="color:#2b9348;"></i> La ruta en <span class="inline-code">{% extends %}</span> debe coincidir con la estructura de carpetas: <strong>'logs/base.html'</strong>.</li>
+                    <li><i class="fas fa-check-circle" style="color:#2b9348;"></i> Siempre usar <span class="inline-code">{% block nombre %}</span> para contenido dinámico que puede sobrescribirse.</li>
+                    <li><i class="fas fa-check-circle" style="color:#2b9348;"></i> No repetir HTML en cada archivo → DRY esencial.</li>
+                    <li><i class="fas fa-check-circle" style="color:#2b9348;"></i> La plantilla hija puede definir múltiples bloques, heredando el resto de la base.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-globe"></i>
+                <h2>🧩 Alternativa: carpeta global templates</h2>
+            </div>
+            <div class="card-body">
+                <p>También puedes crear templates a nivel de proyecto:</p>
+                <div class="code-block">
+                    📁miweb/<br>
+                    └── 📁templates/<br>
+                        └── base.html
+                </div>
+                <p>Configuración en <span class="inline-code">settings.py</span>:</p>
+                <div class="code-block">
+                    TEMPLATES = [<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;{<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'DIRS': [BASE_DIR / 'templates'],<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;},<br>
+                    ]
+                </div>
+                <p>Luego en cualquier template hija:</p>
+                <div class="code-block">
+                    {% extends 'base.html' %}
+                </div>
+                <p>✅ Ideal para layouts que comparten múltiples aplicaciones.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resumen final claro -->
+    <div class="summary-grid">
+        <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;"><i class="fas fa-layer-group" style="color:#2c6e9e;"></i> 📝 Resumen: Herencia en pocas líneas</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.8rem;">
+            <div><span class="tag">base.html</span> → plantilla principal con bloques</div>
+            <div><span class="tag">inicio.html</span> → extiende la base</div>
+            <div><span class="tag">{% extends %}</span> → hereda la estructura</div>
+            <div><span class="tag">{% block %}</span> → define contenido dinámico</div>
+        </div>
+        <hr>
+        <div style="background: #e6f7ec; border-radius: 1rem; padding: 1rem; margin-top: 0.5rem;">
+            <i class="fas fa-leaf" style="color:#2e7d32;"></i> <strong>Ventaja clave:</strong> La herencia de plantillas mantiene el código limpio, reutilizable y organizado. Cambia el header una vez en base.html y se refleja en todas las páginas hijas.
+        </div>
+    </div>
+
+    <!-- Bonus visual: comparación DRY antes/después -->
+    <div class="card" style="margin-top: 2rem;">
+        <div class="card-header">
+            <i class="fas fa-chart-line"></i>
+            <h2>📈 Antes vs Después (DRY en acción)</h2>
+        </div>
+        <div class="card-body">
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                <div style="flex:1; background:#fef2f2; border-radius: 1rem; padding: 1rem;">
+                    <i class="fas fa-times-circle" style="color:#b91c1c;"></i> <strong>Sin herencia</strong>
+                    <div class="code-block" style="margin-top: 0.5rem; background:#2d1a1a;">
+                        &lt;!-- MISMO HEADER en 10 páginas --&gt;<br>
+                        &lt;header&gt;&lt;h1&gt;Menú&lt;/h1&gt;&lt;/header&gt;<br>
+                        &lt;!-- Contenido diferente --&gt;<br>
+                        ... Código duplicado
+                    </div>
+                    <p class="tag" style="background:#fecaca;">❌ 1000+ líneas duplicadas</p>
+                </div>
+                <div style="flex:1; background:#e8f5e9; border-radius: 1rem; padding: 1rem;">
+                    <i class="fas fa-check-circle" style="color:#15803d;"></i> <strong>Con herencia (DRY)</strong>
+                    <div class="code-block" style="margin-top: 0.5rem; background:#1a2a1f;">
+                        {% extends 'base.html' %}<br>
+                        {% block content %}Nuevo contenido{% endblock %}
+                    </div>
+                    <p class="tag" style="background:#c8e6c9;">✅ Código mínimo, máxima reutilización</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- recordatorio final: importancia de los Bloques -->
+    <div class="summary-grid" style="background: #fafffd; margin-top: 1rem;">
+        <p><i class="fas fa-crown" style="color:#eab308;"></i> <strong>Consejo profesional:</strong> Organiza bloques semánticos como <span class="inline-code">{% block title %}</span>, <span class="inline-code">{% block css %}</span>, <span class="inline-code">{% block js %}</span> para un control granular. La herencia es la base de proyectos Django escalables.</p>
+    </div>
+
+    <footer>
+        <i class="fab fa-python"></i> Herencia de Plantillas Django — DRY: Don't Repeat Yourself • <i class="fas fa-code"></i> Código limpio y mantenible<br>
+        Documentación visual: plantilla base + extensión + buenas prácticas en la estructura <strong>logs/templates/logs/</strong>.
+    </footer>
+</div>
+</body>
+</html>

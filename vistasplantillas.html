@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Django Guide: Vistas y Plantillas | Documentación Visual</title>
+    <!-- Fuentes modernas y tipografía clara -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 (iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f1f5f9;
+            font-family: 'Inter', sans-serif;
+            color: #0a0c10;
+            line-height: 1.5;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* header estilizado */
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0f2b3d, #1e4a6e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.01em;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-badge {
+            background: #e2e8f0;
+            color: #1e293b;
+            display: inline-block;
+            padding: 0.25rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            backdrop-filter: blur(4px);
+            margin-top: 0.5rem;
+        }
+
+        .hero-badge i {
+            margin-right: 6px;
+            color: #2c6e9e;
+        }
+
+        .sub {
+            color: #334155;
+            margin-top: 0.75rem;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* grid cards estilo dashboard */
+        .grid-docs {
+            display: grid;
+            /*grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));*/
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.02);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            overflow: hidden;
+            border: 1px solid #eef2f6;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 32px -16px rgba(0, 32, 64, 0.12);
+            border-color: #cbdde9;
+        }
+
+        .card-header {
+            background: #f8fafc;
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid #e9edf2;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header i {
+            font-size: 1.6rem;
+            color: #2c6e9e;
+        }
+
+        .card-header h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #0f172a;
+            letter-spacing: -0.2px;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .code-block {
+            background: #0f172a;
+            color: #e2e8f0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            border-radius: 1rem;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+            line-height: 1.5;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .inline-code {
+            background: #eef2ff;
+            color: #1e40af;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 8px;
+        }
+
+        .path {
+            font-family: monospace;
+            background: #eef2ff;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            display: inline-block;
+            font-weight: 500;
+        }
+
+        .list-structure {
+            background: #f1f5f9;
+            border-radius: 1rem;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+        }
+
+        hr {
+            margin: 1rem 0;
+            border: none;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .tag {
+            background: #dbeafe;
+            color: #1e3a8a;
+            border-radius: 20px;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .summary-grid {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            padding: 1.8rem;
+            margin-top: 1rem;
+            border: 1px solid #e2edf2;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 0.85rem;
+            color: #5b6e8c;
+            border-top: 1px solid #dce5ec;
+            padding-top: 2rem;
+        }
+
+        @media (max-width: 700px) {
+            .hero h1 {
+                font-size: 1.9rem;
+            }
+            .card-header h2 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1><i class="fab fa-python" style="color: #2c6e9e; margin-right: 10px;"></i> Vistas y Plantillas en Django</h1>
+        <div class="hero-badge"><i class="fas fa-code-branch"></i> Guía esencial · Estructura moderna</div>
+        <div class="sub">Separación clara entre lógica (Python) y presentación (HTML) → Código mantenible y profesional.</div>
+    </div>
+
+    <!-- Cuadrícula principal: estructura + vistas + urls + plantillas -->
+    <div class="grid-docs">
+        <!-- Estructura del proyecto -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-folder-tree"></i>
+                <h2>📁 Estructura del Proyecto</h2>
+            </div>
+            <div class="card-body">
+                <p>Tu proyecto está dividido en dos partes clave:</p>
+                <div class="list-structure">
+                    <i class="fas fa-folder-open"></i> <strong>miweb/</strong> → Proyecto principal (configuración)<br>
+                    <i class="fas fa-folder"></i> <strong>logs/</strong> → Aplicación (lógica de negocio)
+                </div>
+                <p><span class="tag"><i class="fas fa-info-circle"></i> Convención Django</span> Cada app tiene su propia lógica y plantillas.</p>
+                <div class="code-block">
+                📁   miweb/<br>
+                    ├── settings.py<br>
+                    ├── urls.py<br>
+                    └── wsgi.py<br>
+                📁 logs/<br>
+                    ├── 📁 migrations/<br>
+                    ├── views.py<br>
+                    ├── models.py<br>
+                    └── 📁 templates/
+                </div>
+            </div>
+        </div>
+
+        <!-- Vistas en Django -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-eye"></i>
+                <h2>👁️ Vistas (views.py)</h2>
+            </div>
+            <div class="card-body">
+                <p>Las vistas contienen la lógica que procesa peticiones y retorna respuestas. Ubicación:</p>
+                <div class="path"><i class="fas fa-file-alt"></i> logs/views.py</div>
+                <div class="code-block">
+                    from django.shortcuts import render<br><br>
+                    def inicio(request):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return render(request, 'inicio.html')
+                </div>
+                <p><i class="fas fa-lightbulb" style="color:#f59e0b;"></i> Tip: inicio.html esta en 📁 logs/templates/</p>
+            </div>
+        </div>
+
+        <!-- Configuración de URLs (App + Proyecto) -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-link"></i>
+                <h2>🔗 URLs: Enrutamiento</h2>
+            </div>
+            <div class="card-body">
+                <p><strong>3.1 URLs de la App</strong> → <span class="path">logs/urls.py</span></p>
+                <div class="code-block">
+                    from django.urls import path<br>
+                    from . import views<br><br>
+                    urlpatterns = [<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;path('inicio/', views.inicio, name='inicio'),<br>
+                    ]
+                </div>
+                <p><strong>3.2 URLs del Proyecto</strong> → <span class="path">miweb/urls.py</span></p>
+                <div class="code-block">
+                    from django.contrib import admin<br>
+                    from django.urls import path, include<br><br>
+                    urlpatterns = [<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;path('admin/', admin.site.urls),<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;path('', include('logs.urls')),<br>
+                    ]
+                </div>
+            </div>
+        </div>
+
+        <!-- Plantillas (Templates) y jerarquía -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-file-code"></i>
+                <h2>📄 Plantillas (Templates)</h2>
+            </div>
+            <div class="card-body">
+                <p>Ubicación recomendada:</p>
+                <div class="path"><i class="fas fa-folder"></i> logs/templates/inicio.html</div>
+                <div class="code-block">
+                    &lt;!DOCTYPE html&gt;<br>
+                    &lt;html&gt;<br>
+                    &lt;head&gt;&lt;title&gt;Inicio&lt;/title&gt;&lt;/head&gt;<br>
+                    &lt;body&gt;<br>
+                    &lt;h1&gt;Hola mundo desde Django&lt;/h1&gt;<br>
+                    &lt;/body&gt;<br>
+                    &lt;/html&gt;
+                </div>
+                <p>Django busca automáticamente dentro de <span class="inline-code">templates/</span> de cada app instalada.</p>
+            </div>
+        </div>
+
+        <!-- Enviar datos a la plantilla + Contexto -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-exchange-alt"></i>
+                <h2>📤 Enviar datos a la vista</h2>
+            </div>
+            <div class="card-body">
+                <p>Vista modificada con contexto:</p>
+                <div class="code-block">
+                    def inicio(request):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;datos = {
+                           'titulo': 'Bienvenidos a mi pagina',
+                           'contenido': 'Esta es una pagina de prueba',
+                           'autor': 'Ricardo Quintanilla',
+                        }<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return render(request, 'inicio.html', datos)
+                </div>
+                <p>En la plantilla, accedes con la sintaxis de llaves dobles:</p>
+                <div class="code-block">
+                    &lt;body&gt;
+                        &lt;div&gt;
+                            &lt;h1&gt; {{titulo}} &lt;/h1&gt;
+                        &lt;/div&gt;
+                        &lt;p&gt;{{contenido}}&lt;/p&gt;
+                        &lt;p&gt;{{autor}}&lt;/p&gt;
+                    &lt;/body&gt;
+                </div>
+                <p><i class="fas fa-magic"></i> Resultado:<br>
+                <img src="img01.png">
+
+                </p>
+            </div>
+        </div>
+
+        <!-- Lógica en plantillas: condicionales y bucles -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-code-branch"></i>
+                <h2>⚙️ Lógica en Plantillas</h2>
+            </div>
+            <div class="card-body">
+                <p><span class="tag">{% if %}</span> Condicionales</p>
+                <div class="code-block">
+                    {% if nombre %}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;✅ Existe nombre: {{ nombre }}&lt;/p&gt;<br>
+                    {% endif %}
+                </div>
+                <p><span class="tag">{% for %}</span> Bucles</p>
+                <div class="code-block">
+                    &lt;ul&gt;<br>
+                    {% for item in lista %}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;{{ item }}&lt;/li&gt;<br>
+                    {% endfor %}<br>
+                    &lt;/ul&gt;
+                </div>
+                <p><i class="fas fa-info-circle"></i> También soporta <span class="inline-code">{% else %}</span>, filtros, y más.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de herencia de plantillas (destacada) -->
+    <div class="card" style="margin-bottom: 2rem;">
+        <div class="card-header">
+            <i class="fas fa-layer-group"></i>
+            <h2>🧬 Herencia de Plantillas (DRY)</h2>
+        </div>
+        <div class="card-body">
+            <div style="display: flex; flex-wrap: wrap; gap: 1.5rem;">
+                <div style="flex:1; min-width: 240px;">
+                    <p><strong>📄 base.html</strong> (estructura madre)</p>
+                    <div class="code-block">
+                        &lt;html&gt;<br>
+                        &lt;head&gt;<br>
+                        &nbsp;&nbsp;&lt;title&gt;{% block titulo %}{% endblock %}&lt;/title&gt;<br>
+                        &lt;/head&gt;<br>
+                        &lt;body&gt;<br>
+                        &nbsp;&nbsp;{% block contenido %}{% endblock %}<br>
+                        &lt;/body&gt;<br>
+                        &lt;/html&gt;
+                    </div>
+                </div>
+                <div style="flex:1; min-width: 240px;">
+                    <p><strong>📄 inicio.html</strong> (hija)</p>
+                    <div class="code-block">
+                        {% extends 'base.html' %}<br><br>
+                        {% block titulo %}Inicio{% endblock %}<br><br>
+                        {% block contenido %}<br>
+                        &lt;h1&gt;Bienvenido a Django&lt;/h1&gt;<br>
+                        {% endblock %}
+                    </div>
+                    <p class="tag" style="margin-top: 8px;"><i class="fas fa-check-circle"></i> Evita repetir el layout común</p>
+                </div>
+            </div>
+            <hr>
+            <p><i class="fas fa-database"></i> Los bloques pueden ser múltiples (<span class="inline-code">{% block nombre %}</span>) y se sobrescriben en las vistas hijas.</p>
+        </div>
+    </div>
+
+    <!-- Resumen final estilo checklist -->
+    <div class="summary-grid">
+        <h3 style="display: flex; align-items: center; gap: 10px; font-weight: 700; margin-bottom: 1.2rem;"><i class="fas fa-clipboard-list" style="color:#2c6e9e;"></i> 📌 Resumen visual: Estructura y convenciones</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
+            <div><i class="fas fa-check-circle" style="color:#2b9348;"></i> <strong>Vistas</strong> → <span class="inline-code">logs/views.py</span></div>
+            <div><i class="fas fa-check-circle" style="color:#2b9348;"></i> <strong>URLs app</strong> → <span class="inline-code">logs/urls.py</span></div>
+            <div><i class="fas fa-check-circle" style="color:#2b9348;"></i> <strong>URLs proyecto</strong> → <span class="inline-code">miweb/urls.py</span></div>
+            <div><i class="fas fa-check-circle" style="color:#2b9348;"></i> <strong>Plantillas</strong> → <span class="inline-code">logs/templates/</span></div>
+            <div><i class="fas fa-check-circle" style="color:#2b9348;"></i> <strong>Contexto</strong> → Diccionario en <span class="inline-code">render()</span></div>
+            <div><i class="fas fa-check-circle" style="color:#2b9348;"></i> <strong>Herencia</strong> → <span class="inline-code">{% extends %}</span> + bloques</div>
+        </div>
+        <div style="background: #eef6fc; border-radius: 1rem; padding: 1rem; margin-top: 1.2rem;">
+            <i class="fas fa-quote-left" style="margin-right: 8px; color:#0f67a5;"></i>
+            Django separa lógica (Python) y presentación (HTML), facilitando el mantenimiento, la reutilización y la escalabilidad del código.
+        </div>
+    </div>
+
+    <!-- Bonus: ejemplo práctico con lista / contexto (extras) -->
+    <div class="card" style="margin-top: 1.5rem;">
+        <div class="card-header">
+            <i class="fas fa-chalkboard-user"></i>
+            <h2>🎯 Ejemplo integrado: Vista + Bucle + Condicional</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>Vista (logs/views.py) con lista</strong></p>
+            <div class="code-block">
+                def inicio(request):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;articulos = ['📘 Django ORM', '🎨 Tailwind', '🐍 Python Avanzado']<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;return render(request, 'inicio.html', {'articulos': articulos, 'usuario': 'Ana'})
+            </div>
+            <p><strong>Plantilla (inicio.html) usando lógica</strong></p>
+            <div class="code-block">
+                {% if usuario %}<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;👤 Hola, {{ usuario }}&lt;/p&gt;<br>
+                {% endif %}<br><br>
+                &lt;h3&gt;Lista de temas:&lt;/h3&gt;<br>
+                &lt;ul&gt;<br>
+                {% for item in articulos %}<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;{{ item }}&lt;/li&gt;<br>
+                {% endfor %}<br>
+                &lt;/ul&gt;
+            </div>
+            <p><i class="fas fa-code"></i> El motor de templates de Django es seguro y evita inyección de código.</p>
+        </div>
+    </div>
+
+    <!-- Representación de jerarquía final de archivos -->
+    <div class="summary-grid" style="background: #f9fefb;">
+        <h3 style="margin-bottom: 0.8rem;"><i class="fas fa-sitemap"></i> Árbol de archivos típico del proyecto</h3>
+        <div class="code-block" style="background:#1e2a3a; color:#cbd5e1;">
+            📁 miweb/<br>
+            │   ├── __init__.py<br>
+            │   ├── settings.py<br>
+            │   ├── urls.py      ⬅️ include('logs.urls')<br>
+            │   └── wsgi.py<br>
+            📁 logs/<br>
+            │   ├── __init__.py<br>
+            │   ├── admin.py<br>
+            │   ├── apps.py<br>
+            │   ├── models.py<br>
+            │   ├── views.py     ⬅️ funciones/class-based views<br>
+            │   ├── urls.py      ⬅️ path('', views.inicio)<br>
+            │   └── 📁 templates/<br>
+            │        └── base.html<br>
+            │        └── inicio.html  ⬅️ {% extends 'base.html' %}<br>
+            └── manage.py
+        </div>
+        <p style="margin-top: 0.8rem; font-size:0.9rem;">✅ Organización modular: cada aplicación (como <b>logs</b>) contiene su propio conjunto de vistas, URLs y plantillas.</p>
+    </div>
+
+    <footer>
+        <i class="fab fa-django"></i> Guía básica: Vistas y Plantillas en Django — Estructura moderna & buenas prácticas<br>
+        Documentación visual basada en la arquitectura MTV (Model-Template-View) de Django.
+    </footer>
+</div>
+</body>
+</html>
