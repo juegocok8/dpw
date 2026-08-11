@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laboratorio · ArrayList y Sesiones con Servlet</title>
+    <!-- Bootstrap 5 + Font Awesome 6 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        body {
+            background: #e8f0fe;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            padding: 2rem 0;
+        }
+        .card-main {
+            border: none;
+            border-radius: 2rem;
+            background: #ffffff;
+            box-shadow: 0 20px 40px -10px rgba(0, 40, 100, 0.25);
+            overflow: hidden;
+        }
+        .card-header-custom {
+            background: #0a58ca;
+            color: white;
+            padding: 1.5rem 2rem;
+            border-bottom: 5px solid #ffc107;
+        }
+        .card-header-custom h1 {
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+        .badge-java {
+            background: #ffc107;
+            color: #0a1e3c;
+            font-weight: 600;
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+        }
+        .badge-session {
+            background: #0dcaf0;
+            color: #0a1e3c;
+            font-weight: 600;
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+        }
+        .badge-servlet {
+            background: #198754;
+            color: white;
+            font-weight: 600;
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+        }
+        .section-title {
+            font-weight: 700;
+            color: #0a2a5c;
+            border-left: 6px solid #ffb800;
+            padding-left: 1rem;
+            margin-top: 2rem;
+            margin-bottom: 1.2rem;
+        }
+        .section-title i {
+            color: #0a58ca;
+            margin-right: 0.5rem;
+        }
+        .code-box {
+            background: #f0f7ff;
+            border-radius: 1rem;
+            padding: 1rem;
+            border-left: 6px solid #0a58ca;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: #0a1e3c;
+            margin-bottom: 1rem;
+        }
+        .code-box-java {
+            border-left-color: #ffb800;
+            background: #fcf5e8;
+        }
+        .code-box-servlet {
+            border-left-color: #198754;
+            background: #e8f5e9;
+        }
+        .code-box-bootstrap {
+            border-left-color: #0d6efd;
+            background: #e6f2ff;
+        }
+        .flow-step {
+            background: #0a58ca;
+            color: white;
+            font-weight: 700;
+            width: 2.2rem;
+            height: 2.2rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-right: 0.8rem;
+            flex-shrink: 0;
+        }
+        .list-group-item-custom {
+            background: #f8fbff;
+            border: none;
+            border-radius: 1rem !important;
+            margin-bottom: 0.6rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 5px solid #0a58ca;
+            font-weight: 500;
+        }
+        .list-group-item-custom:hover {
+            background: #e6f0ff;
+        }
+        .table-demo {
+            border: 2px solid #0a58ca;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        .table-demo thead {
+            background: #0a58ca;
+            color: white;
+        }
+        .table-demo th,
+        .table-demo td {
+            padding: 0.75rem 1rem;
+            border: 1px solid #0a58ca;
+        }
+        .table-demo tbody tr:nth-child(even) {
+            background: #f0f7ff;
+        }
+        .btn-agregar {
+            background: #198754;
+            color: white;
+            border-radius: 30px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 600;
+            border: none;
+            transition: 0.15s;
+        }
+        .btn-agregar:hover {
+            background: #157347;
+            color: white;
+        }
+        .btn-ver {
+            background: #0d6efd;
+            color: white;
+            border-radius: 30px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 600;
+            border: none;
+            transition: 0.15s;
+        }
+        .btn-ver:hover {
+            background: #0b5ed7;
+            color: white;
+        }
+        .footer-badge {
+            background: #e6f0ff;
+            color: #0a2a5c;
+            border: 2px solid #0a58ca;
+            border-radius: 40px;
+            padding: 0.3rem 1.2rem;
+        }
+        .highlight-box {
+            background: #e6f2ff;
+            border: 2px solid #0a58ca;
+            border-radius: 1rem;
+            padding: 1rem;
+        }
+        .arquitectura-box {
+            background: #f0f7ff;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 2px solid #0a58ca;
+        }
+        .text-primary-dark {
+            color: #0a1e3c;
+        }
+
+        @media print {
+            @page { size: A4; margin: 1.5cm; }
+            body { background: #fff !important; color: #000 !important; font-size: 11pt; padding: 0; }
+            .container, .card-main, .card-body {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0;
+                padding: 0;
+                box-shadow: none !important;
+                border: none !important;
+                border-radius: 0 !important;
+            }
+            .card-header-custom {
+                background: #fff !important;
+                color: #000 !important;
+                border-bottom: 2px solid #000;
+                padding: 0 0 10px 0;
+            }
+            .card-header-custom i, .section-title i, .badge-java, .badge-session,
+            .badge-servlet, .btn-agregar, .btn-ver, .footer-badge {
+                display: none !important;
+            }
+            .section-title { color: #000; border-left: 4px solid #000; margin-top: 20px; page-break-after: avoid; }
+            .code-box, .code-box-java, .code-box-servlet, .code-box-bootstrap {
+                background: #fff !important;
+                border: 1px solid #000;
+                border-left: 4px solid #000;
+                color: #000 !important;
+                font-size: 9pt;
+                padding: 8px;
+                overflow: visible;
+                white-space: pre-wrap;
+                word-break: break-word;
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+            table, .table-demo { border-collapse: collapse; width: 100%; page-break-inside: auto; }
+            thead { display: table-header-group; }
+            tr { page-break-inside: avoid; }
+            th, td { border: 1px solid #000 !important; color: #000 !important; padding: 6px; }
+            .list-group-item-custom, .flow-step {
+                background: #fff !important;
+                color: #000 !important;
+                border: 1px solid #000;
+            }
+            a { color: #000 !important; text-decoration: none; }
+            hr { border-color: #000; }
+            h1, h2, h3, h4, h5, .section-title, .code-box, table {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="">
+
+            <div class="card-main">
+
+                <!-- Encabezado -->
+                <div class="card-header-custom d-flex flex-wrap align-items-center justify-content-between">
+                    <div>
+                        <h1 class="display-6 mb-1">
+                            <i class="fas fa-layer-group me-2"></i>ArrayList &amp; Sesiones con Servlet
+                        </h1>
+                        <p class="mb-0 text-white-50 lead" style="font-weight: 300;">
+                            <i class="fas fa-flask me-1"></i> Laboratorio · registro de personas usando MVC con Servlet + Bootstrap 5
+                        </p>
+                    </div>
+                    <div class="mt-2 mt-sm-0">
+                        <span class="badge-java me-2"><i class="fab fa-java me-1"></i> Java</span>
+                        <span class="badge-servlet me-2"><i class="fas fa-server me-1"></i> Servlet</span>
+                        <span class="badge-session"><i class="fas fa-user-circle me-1"></i> HttpSession</span>
+                    </div>
+                </div>
+
+                <!-- Cuerpo -->
+                <div class="card-body p-4 p-md-5">
+
+                    <!-- ===== OBJETIVO ===== -->
+                    <div class="d-flex align-items-start gap-3 mb-4 p-3 rounded-4 highlight-box">
+                        <i class="fas fa-bullseye fa-2x text-primary"></i>
+                        <div>
+                            <h5 class="fw-bold text-primary-dark mb-1"><i class="fas fa-check-circle text-warning me-2"></i>Objetivo</h5>
+                            <p class="mb-0">Desarrollar una aplicación web que permita registrar personas en memoria utilizando un <code>ArrayList&lt;Persona&gt;</code> almacenado en la sesión (<code>HttpSession</code>). La lógica de negocio se implementa mediante un <strong>Servlet</strong> siguiendo el patrón MVC, separando la vista (JSP) del controlador. Las vistas utilizan <strong>Bootstrap 5</strong> para un diseño moderno y responsivo.</p>
+                        </div>
+                    </div>
+
+                    <!-- ===== ENUNCIADO ===== -->
+                    <h3 class="section-title"><i class="fas fa-list-check"></i> Enunciado del ejercicio</h3>
+                    <div class="p-3 rounded-4 mb-4" style="background: #fcf5e8; border: 2px solid #ffb800;">
+                        <p class="mb-2"><i class="fas fa-pencil-alt text-warning me-2"></i> Construya una aplicación web utilizando <strong>Servlets</strong>, <strong>JSP</strong> y <strong>JavaBeans</strong> que permita registrar personas con los siguientes atributos:</p>
+                        <div class="d-flex flex-wrap gap-3 mb-2">
+                            <span class="bg-primary bg-opacity-10 text-primary-dark px-3 py-2 rounded-pill"><i class="fas fa-id-card me-1"></i> DUI</span>
+                            <span class="bg-success bg-opacity-10 text-primary-dark px-3 py-2 rounded-pill"><i class="fas fa-user me-1"></i> Nombres</span>
+                            <span class="bg-primary bg-opacity-10 text-primary-dark px-3 py-2 rounded-pill"><i class="fas fa-user-tag me-1"></i> Apellidos</span>
+                            <span class="bg-primary bg-opacity-10 text-primary-dark px-3 py-2 rounded-pill"><i class="fas fa-home me-1"></i> Dirección</span>
+                        </div>
+                        <p class="mb-0"><i class="fas fa-database text-primary me-2"></i> Cada registro se almacena en un <code>ArrayList&lt;Persona&gt;</code> guardado en la <strong>sesión del usuario</strong>. La aplicación consta de:</p>
+                        <ul class="mt-2 mb-0">
+                            <li><i class="fas fa-file-alt text-primary me-2"></i> <strong>index.jsp</strong>: vista principal que muestra el listado de personas (con Bootstrap).</li>
+                            <li><i class="fas fa-file-alt text-success me-2"></i> <strong>agregar.jsp</strong>: formulario para ingresar una nueva persona (con Bootstrap).</li>
+                            <li><i class="fas fa-code text-primary me-2"></i><strong>PersonaServlet</strong>: controlador que procesa las peticiones (guardar, listar, eliminar).</li>
+                            <li><i class="fas fa-cog text-primary me-2"></i> <strong>Persona.java</strong>: Modelo.</li>
+                        </ul>
+                    </div>
+
+                    <!-- ===== ARQUITECTURA MVC ===== -->
+                    <h3 class="section-title"><i class="fas fa-sitemap"></i> Arquitectura MVC</h3>
+                    <div class="arquitectura-box mb-4">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="p-3 text-center rounded-3 h-100" style="background:#e6f2ff; border:2px solid #0a58ca;">
+                                    <i class="fas fa-eye fa-2x text-primary mb-2"></i>
+                                    <h5 class="fw-bold text-primary-dark">Vista (JSP)</h5>
+                                    <p class="small mb-0">index.jsp<br>agregar.jsp</p>
+                                    <span class="badge bg-primary">Bootstrap 5</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 text-center rounded-3 h-100" style="background:#fcf5e8; border:2px solid #ffb800;">
+                                    <i class="fas fa-code fa-2x text-warning mb-2"></i>
+                                    <h5 class="fw-bold text-primary-dark">Controlador (Servlet)</h5>
+                                    <p class="small mb-0">PersonaServlet</p>
+                                    <span class="badge bg-warning text-dark">Lógica de negocio</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 text-center rounded-3 h-100" style="background:#e8f5e9; border:2px solid #198754;">
+                                    <i class="fas fa-database fa-2x text-success mb-2"></i>
+                                    <h5 class="fw-bold text-primary-dark">Modelo (JavaBean)</h5>
+                                    <p class="small mb-0">Persona.java</p>
+                                    <span class="badge bg-success">Datos</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== CLASE PERSONA ===== -->
+                    <h3 class="section-title"><i class="fas fa-code"></i> Clase Persona (Modelo)</h3>
+                    <div class="code-box">
+<span class="text-primary-dark">package clases;</span>
+
+<span class="text-primary-dark">public class Persona implements java.io.Serializable {</span>
+    <span class="text-primary-dark">    private String dui;</span>
+    <span class="text-primary-dark">    private String nombres;</span>
+    <span class="text-primary-dark">    private String apellidos;</span>
+    <span class="text-primary-dark">    private String direccion;</span>
+
+    <span class="text-primary-dark">    public Persona() {}</span>
+
+    <span class="text-primary-dark">    public Persona(String dui, String nombres, String apellidos, String direccion) {</span>
+        <span class="text-primary-dark">        this.dui = dui;</span>
+        <span class="text-primary-dark">        this.nombres = nombres;</span>
+        <span class="text-primary-dark">        this.apellidos = apellidos;</span>
+        <span class="text-primary-dark">        this.direccion = direccion;</span>
+    <span class="text-primary-dark">    }</span>
+
+    <span class="text-primary-dark">    // Getters y Setters</span>
+    <span class="text-primary-dark">    public String getDui() { return dui; }</span>
+    <span class="text-primary-dark">    public void setDui(String dui) { this.dui = dui; }</span>
+    <span class="text-primary-dark">    public String getNombres() { return nombres; }</span>
+    <span class="text-primary-dark">    public void setNombres(String nombres) { this.nombres = nombres; }</span>
+    <span class="text-primary-dark">    public String getApellidos() { return apellidos; }</span>
+    <span class="text-primary-dark">    public void setApellidos(String apellidos) { this.apellidos = apellidos; }</span>
+    <span class="text-primary-dark">    public String getDireccion() { return direccion; }</span>
+    <span class="text-primary-dark">    public void setDireccion(String direccion) { this.direccion = direccion; }</span>
+<span class="text-primary-dark">}</span>
+</div>
+
+                    <!-- ===== SERVLET ===== -->
+                    <h3 class="section-title"><i class="fas fa-server"></i> PersonaServlet (Controlador)</h3>
+                    <div class="code-box code-box-servlet">
+<span class="text-primary-dark">package controladores;</span>
+
+<span class="text-primary-dark">import java.io.IOException;</span>
+<span class="text-primary-dark">import java.util.ArrayList;</span>
+<span class="text-primary-dark">import javax.servlet.ServletException;</span>
+<span class="text-primary-dark">import javax.servlet.annotation.WebServlet;</span>
+<span class="text-primary-dark">import javax.servlet.http.HttpServlet;</span>
+<span class="text-primary-dark">import javax.servlet.http.HttpServletRequest;</span>
+<span class="text-primary-dark">import javax.servlet.http.HttpServletResponse;</span>
+<span class="text-primary-dark">import javax.servlet.http.HttpSession;</span>
+<span class="text-primary-dark">import clases.Persona;</span>
+
+<span class="text-primary-dark">@WebServlet("/PersonaServlet")</span>
+<span class="text-primary-dark">public class PersonaServlet extends HttpServlet {</span>
+
+    <span class="text-primary-dark">    @Override</span>
+    <span class="text-primary-dark">    protected void doGet(HttpServletRequest request, HttpServletResponse response)</span>
+            <span class="text-primary-dark">            throws ServletException, IOException {</span>
+
+        <span class="text-primary-dark">        String action = request.getParameter("action");</span>
+        <span class="text-primary-dark">        HttpSession session = request.getSession();</span>
+
+        <span class="text-primary-dark">        if ("eliminar".equals(action)) {</span>
+            <span class="text-primary-dark">            int index = Integer.parseInt(request.getParameter("index"));</span>
+            <span class="text-primary-dark">            ArrayList&lt;Persona&gt; lista = (ArrayList&lt;Persona&gt;) session.getAttribute("personas");</span>
+            <span class="text-primary-dark">            if (lista != null && index >= 0 && index < lista.size()) {</span>
+                <span class="text-primary-dark">                lista.remove(index);</span>
+                <span class="text-primary-dark">                session.setAttribute("personas", lista);</span>
+            <span class="text-primary-dark">            }</span>
+            <span class="text-primary-dark">            response.sendRedirect("index.jsp");</span>
+            <span class="text-primary-dark">            return;</span>
+
+        <span class="text-primary-dark">        } else if ("limpiar".equals(action)) {</span>
+            <span class="text-primary-dark">            session.removeAttribute("personas");</span>
+            <span class="text-primary-dark">            response.sendRedirect("index.jsp");</span>
+            <span class="text-primary-dark">            return;</span>
+
+        <span class="text-primary-dark">        } else if ("agregar".equals(action)) {</span>
+            <span class="text-primary-dark">            response.sendRedirect("agregar.jsp");</span>
+            <span class="text-primary-dark">            return;</span>
+        <span class="text-primary-dark">        }</span>
+
+        <span class="text-primary-dark">        response.sendRedirect("index.jsp");</span>
+    <span class="text-primary-dark">    }</span>
+
+    <span class="text-primary-dark">    @Override</span>
+    <span class="text-primary-dark">    protected void doPost(HttpServletRequest request, HttpServletResponse response)</span>
+            <span class="text-primary-dark">            throws ServletException, IOException {</span>
+
+        <span class="text-primary-dark">        String dui = request.getParameter("dui");</span>
+        <span class="text-primary-dark">        String nombres = request.getParameter("nombres");</span>
+        <span class="text-primary-dark">        String apellidos = request.getParameter("apellidos");</span>
+        <span class="text-primary-dark">        String direccion = request.getParameter("direccion");</span>
+
+        <span class="text-primary-dark">        if (dui == null || dui.trim().isEmpty() ||</span>
+            <span class="text-primary-dark">            nombres == null || nombres.trim().isEmpty() ||</span>
+            <span class="text-primary-dark">            apellidos == null || apellidos.trim().isEmpty() ||</span>
+            <span class="text-primary-dark">            direccion == null || direccion.trim().isEmpty()) {</span>
+
+            <span class="text-primary-dark">            request.setAttribute("error", "Todos los campos son obligatorios");</span>
+            <span class="text-primary-dark">            request.getRequestDispatcher("agregar.jsp").forward(request, response);</span>
+            <span class="text-primary-dark">            return;</span>
+        <span class="text-primary-dark">        }</span>
+
+        <span class="text-primary-dark">        HttpSession session = request.getSession();</span>
+        <span class="text-primary-dark">        ArrayList&lt;Persona&gt; lista = (ArrayList&lt;Persona&gt;) session.getAttribute("personas");</span>
+        <span class="text-primary-dark">        if (lista == null) {</span>
+            <span class="text-primary-dark">            lista = new ArrayList&lt;&gt;();</span>
+        <span class="text-primary-dark">        }</span>
+
+        <span class="text-primary-dark">        Persona p = new Persona(dui, nombres, apellidos, direccion);</span>
+        <span class="text-primary-dark">        lista.add(p);</span>
+
+        <span class="text-primary-dark">        session.setAttribute("personas", lista);</span>
+
+        <span class="text-primary-dark">        response.sendRedirect("index.jsp");</span>
+    <span class="text-primary-dark">    }</span>
+<span class="text-primary-dark">}</span>
+</div>
+
+                    <!-- ===== AGREGAR.JSP CON BOOTSTRAP ===== -->
+                    <h3 class="section-title"><i class="fas fa-file-plus"></i> agregar.jsp (Vista con Bootstrap 5)</h3>
+                    <div class="code-box code-box-bootstrap">
+&lt;%@page contentType="text/html" pageEncoding="UTF-8"%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="es"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+    &lt;title&gt;Agregar Persona&lt;/title&gt;
+    &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" /&gt;
+    &lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" /&gt;
+&lt;/head&gt;
+&lt;body class="bg-light"&gt;
+
+&lt;div class="container py-5"&gt;
+    &lt;div class="row justify-content-center"&gt;
+        &lt;div class="col-md-6 col-lg-5"&gt;
+
+            &lt;div class="card shadow-lg border-0 rounded-4"&gt;
+                &lt;div class="card-header bg-success text-white rounded-top-4"&gt;
+                    &lt;h2 class="mb-0"&gt;&lt;i class="fas fa-user-plus me-2"&gt;&lt;/i&gt;Agregar Persona&lt;/h2&gt;
+                &lt;/div&gt;
+                &lt;div class="card-body"&gt;
+
+                    &lt;% if (request.getAttribute("error") != null) { %&gt;
+                        &lt;div class="alert alert-danger d-flex align-items-center" role="alert"&gt;
+                            &lt;i class="fas fa-exclamation-circle me-2"&gt;&lt;/i&gt;
+                            &lt;%= request.getAttribute("error") %&gt;
+                        &lt;/div&gt;
+                    &lt;% } %&gt;
+
+                    &lt;form action="PersonaServlet" method="post"&gt;
+                        &lt;div class="mb-3"&gt;
+                            &lt;label for="dui" class="form-label fw-bold"&gt;
+                                &lt;i class="fas fa-id-card me-1 text-primary"&gt;&lt;/i&gt; DUI
+                            &lt;/label&gt;
+                            &lt;input type="text" class="form-control" id="dui" name="dui"
+                                   placeholder="Ej: 12345678-9" required /&gt;
+                        &lt;/div&gt;
+
+                        &lt;div class="mb-3"&gt;
+                            &lt;label for="nombres" class="form-label fw-bold"&gt;
+                                &lt;i class="fas fa-user me-1 text-primary"&gt;&lt;/i&gt; Nombres
+                            &lt;/label&gt;
+                            &lt;input type="text" class="form-control" id="nombres" name="nombres"
+                                   placeholder="Ej: Ana María" required /&gt;
+                        &lt;/div&gt;
+
+                        &lt;div class="mb-3"&gt;
+                            &lt;label for="apellidos" class="form-label fw-bold"&gt;
+                                &lt;i class="fas fa-user-tag me-1 text-primary"&gt;&lt;/i&gt; Apellidos
+                            &lt;/label&gt;
+                            &lt;input type="text" class="form-control" id="apellidos" name="apellidos"
+                                   placeholder="Ej: Pérez Gómez" required /&gt;
+                        &lt;/div&gt;
+
+                        &lt;div class="mb-4"&gt;
+                            &lt;label for="direccion" class="form-label fw-bold"&gt;
+                                &lt;i class="fas fa-home me-1 text-primary"&gt;&lt;/i&gt; Dirección
+                            &lt;/label&gt;
+                            &lt;input type="text" class="form-control" id="direccion" name="direccion"
+                                   placeholder="Ej: Av. Principal #123" required /&gt;
+                        &lt;/div&gt;
+
+                        &lt;div class="d-grid gap-2"&gt;
+                            &lt;button type="submit" class="btn btn-success btn-lg"&gt;
+                                &lt;i class="fas fa-save me-2"&gt;&lt;/i&gt; Guardar
+                            &lt;/button&gt;
+                            &lt;a href="index.jsp" class="btn btn-outline-secondary"&gt;
+                                &lt;i class="fas fa-arrow-left me-2"&gt;&lt;/i&gt; Volver al listado
+                            &lt;/a&gt;
+                        &lt;/div&gt;
+                    &lt;/form&gt;
+
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</div>
+
+                    <!-- ===== INDEX.JSP CON BOOTSTRAP ===== -->
+                    <h3 class="section-title"><i class="fas fa-list"></i> index.jsp (Vista con Bootstrap 5)</h3>
+                    <div class="code-box code-box-bootstrap">
+&lt;%@page import="java.util.ArrayList"%&gt;
+&lt;%@page import="clases.Persona"%&gt;
+&lt;%
+    ArrayList&lt;Persona&gt; lista = (ArrayList&lt;Persona&gt;) session.getAttribute("personas");
+%&gt;
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang="es"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+    &lt;title&gt;Listado de Personas&lt;/title&gt;
+    &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" /&gt;
+    &lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" /&gt;
+&lt;/head&gt;
+&lt;body class="bg-light"&gt;
+
+&lt;div class="container py-5"&gt;
+    &lt;div class="card shadow-lg border-0 rounded-4"&gt;
+        &lt;div class="card-header bg-primary text-white rounded-top-4"&gt;
+            &lt;h2 class="mb-0"&gt;&lt;i class="fas fa-users me-2"&gt;&lt;/i&gt;Listado de Personas&lt;/h2&gt;
+        &lt;/div&gt;
+        &lt;div class="card-body"&gt;
+
+            &lt;div class="table-responsive"&gt;
+                &lt;table class="table table-hover table-bordered align-middle"&gt;
+                    &lt;thead class="table-primary"&gt;
+                        &lt;tr&gt;
+                            &lt;th&gt;#&lt;/th&gt;
+                            &lt;th&gt;&lt;i class="fas fa-id-card me-1"&gt;&lt;/i&gt; DUI&lt;/th&gt;
+                            &lt;th&gt;&lt;i class="fas fa-user me-1"&gt;&lt;/i&gt; Nombres&lt;/th&gt;
+                            &lt;th&gt;&lt;i class="fas fa-user-tag me-1"&gt;&lt;/i&gt; Apellidos&lt;/th&gt;
+                            &lt;th&gt;&lt;i class="fas fa-home me-1"&gt;&lt;/i&gt; Dirección&lt;/th&gt;
+                            &lt;th class="text-center"&gt;Acciones&lt;/th&gt;
+                        &lt;/tr&gt;
+                    &lt;/thead&gt;
+                    &lt;tbody&gt;
+                        &lt;%
+                        if (lista != null && !lista.isEmpty()) {
+                            int contador = 1;
+                            for (Persona p : lista) {
+                        %&gt;
+                            &lt;tr&gt;
+                                &lt;td&gt;&lt;strong&gt;&lt;%= contador++ %&gt;&lt;/strong&gt;&lt;/td&gt;
+                                &lt;td&gt;&lt;%= p.getDui() %&gt;&lt;/td&gt;
+                                &lt;td&gt;&lt;%= p.getNombres() %&gt;&lt;/td&gt;
+                                &lt;td&gt;&lt;%= p.getApellidos() %&gt;&lt;/td&gt;
+                                &lt;td&gt;&lt;%= p.getDireccion() %&gt;&lt;/td&gt;
+                                &lt;td class="text-center"&gt;
+                                    &lt;a href="PersonaServlet?action=eliminar&amp;index=&lt;%= contador-2 %&gt;"
+                                       class="btn btn-danger btn-sm"
+                                       onclick="return confirm('¿Eliminar esta persona?')"&gt;
+                                       &lt;i class="fas fa-trash me-1"&gt;&lt;/i&gt; Eliminar
+                                    &lt;/a&gt;
+                                &lt;/td&gt;
+                            &lt;/tr&gt;
+                        &lt;%
+                            }
+                        } else {
+                        %&gt;
+                            &lt;tr&gt;
+                                &lt;td colspan="6" class="text-center text-muted py-4"&gt;
+                                    &lt;i class="fas fa-info-circle me-2"&gt;&lt;/i&gt;No hay personas registradas
+                                &lt;/td&gt;
+                            &lt;/tr&gt;
+                        &lt;%
+                        }
+                        %&gt;
+                    &lt;/tbody&gt;
+                &lt;/table&gt;
+            &lt;/div&gt;
+
+            &lt;div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2"&gt;
+                &lt;span class="badge bg-primary fs-6 p-2"&gt;
+                    &lt;i class="fas fa-users me-1"&gt;&lt;/i&gt; Total: &lt;%= (lista != null) ? lista.size() : 0 %&gt; persona(s)
+                &lt;/span&gt;
+                &lt;div&gt;
+                    &lt;a href="PersonaServlet?action=agregar" class="btn btn-success"&gt;
+                        &lt;i class="fas fa-plus me-1"&gt;&lt;/i&gt; Agregar nueva persona
+                    &lt;/a&gt;
+                    &lt;% if (lista != null && !lista.isEmpty()) { %&gt;
+                        &lt;a href="PersonaServlet?action=limpiar" class="btn btn-warning"
+                           onclick="return confirm('¿Limpiar toda la lista?')"&gt;
+                           &lt;i class="fas fa-eraser me-1"&gt;&lt;/i&gt; Limpiar lista
+                        &lt;/a&gt;
+                    &lt;% } %&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</div>
+
+                    <!-- ===== OPERACIONES SESIÓN ===== -->
+                    <h3 class="section-title"><i class="fas fa-user-lock"></i> Operaciones con la sesión</h3>
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-4 h-100 highlight-box">
+                                <h5 class="fw-bold text-primary-dark"><i class="fas fa-arrow-right-to-bracket text-warning me-2"></i>Obtener / crear lista</h5>
+                                <div class="code-box" style="background:#e6f0ff; border-left-color:#ffb800; font-size:0.85rem;">
+ArrayList&lt;Persona&gt; lista = (ArrayList&lt;Persona&gt;) session.getAttribute("personas");
+if(lista == null) {
+    lista = new ArrayList&lt;&gt;();
+}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-4 h-100 highlight-box">
+                                <h5 class="fw-bold text-primary-dark"><i class="fas fa-floppy-disk text-warning me-2"></i>Guardar en sesión</h5>
+                                <div class="code-box" style="background:#e6f0ff; border-left-color:#ffb800; font-size:0.85rem;">
+lista.add(persona);
+session.setAttribute("personas", lista);
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-4 h-100 highlight-box">
+                                <h5 class="fw-bold text-primary-dark"><i class="fas fa-rotate-left text-warning me-2"></i>Recuperar</h5>
+                                <div class="code-box" style="background:#e6f0ff; border-left-color:#ffb800; font-size:0.85rem;">
+ArrayList&lt;Persona&gt; lista = (ArrayList&lt;Persona&gt;) session.getAttribute("personas");
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-4 h-100 highlight-box">
+                                <h5 class="fw-bold text-primary-dark"><i class="fas fa-sign-out-alt text-warning me-2"></i>Eliminar de sesión</h5>
+                                <div class="code-box" style="background:#e6f0ff; border-left-color:#ffb800; font-size:0.85rem;">
+session.removeAttribute("personas");
+// o session.invalidate() para cerrar toda la sesión
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== FLUJO ===== -->
+                    <h3 class="section-title"><i class="fas fa-arrows-spin"></i> Flujo de la aplicación</h3>
+                    <ol class="list-unstyled">
+                        <li class="list-group-item-custom d-flex align-items-center">
+                            <span class="flow-step">1</span> El usuario accede a <strong>index.jsp</strong>, que muestra el listado de personas almacenadas en la sesión.
+                        </li>
+                        <li class="list-group-item-custom d-flex align-items-center">
+                            <span class="flow-step">2</span> Hace clic en <strong>"Agregar nueva persona"</strong>, que envía una petición GET a <strong>PersonaServlet?action=agregar</strong> y redirige a <strong>agregar.jsp</strong>.
+                        </li>
+                        <li class="list-group-item-custom d-flex align-items-center">
+                            <span class="flow-step">3</span> Llena el formulario en <strong>agregar.jsp</strong> y envía (POST) a <strong>PersonaServlet</strong>.
+                        </li>
+                        <li class="list-group-item-custom d-flex align-items-center">
+                            <span class="flow-step">4</span> El <strong>Servlet</strong> valida los campos y crea un objeto <code>Persona</code>.
+                        </li>
+                        <li class="list-group-item-custom d-flex align-items-center">
+                            <span class="flow-step">5</span> Obtiene o crea el <code>ArrayList</code> desde la sesión y agrega la nueva persona.
+                        </li>
+                        <li class="list-group-item-custom d-flex align-items-center">
+                            <span class="flow-step">6</span> Guarda la lista en la sesión con <code>session.setAttribute("personas", lista)</code>.
+                        </li>
+                        <li class="list-group-item-custom d-flex align-items-center">
+                            <span class="flow-step">7</span> Redirige a <strong>index.jsp</strong>, que recupera la lista actualizada y la muestra.
+                        </li>
+                        <li class="list-group-item-custom d-flex align-items-center">
+                            <span class="flow-step">8</span> El usuario puede eliminar una persona (acción GET con <code>action=eliminar</code>) o limpiar toda la lista (<code>action=limpiar</code>).
+                        </li>
+                    </ol>
+
+                    <!-- ===== TABLA DEMOSTRATIVA ===== -->
+                    <h3 class="section-title"><i class="fas fa-table"></i> Vista previa: listado en <code>index.jsp</code></h3>
+                    <div class="table-responsive">
+                        <table class="table-demo table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th><i class="fas fa-id-card me-1"></i> DUI</th>
+                                    <th><i class="fas fa-user me-1"></i> Nombres</th>
+                                    <th><i class="fas fa-user-tag me-1"></i> Apellidos</th>
+                                    <th><i class="fas fa-home me-1"></i> Dirección</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>12345678-9</td>
+                                    <td>Ana María</td>
+                                    <td>Pérez Gómez</td>
+                                    <td>Av. Principal #123</td>
+                                    <td><span class="badge bg-danger">Eliminar</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>98765432-1</td>
+                                    <td>Luis Carlos</td>
+                                    <td>Ramírez López</td>
+                                    <td>Calle 5, zona 2</td>
+                                    <td><span class="badge bg-danger">Eliminar</span></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>45678901-2</td>
+                                    <td>Marta Elena</td>
+                                    <td>Hernández Cruz</td>
+                                    <td>Colonia Jardín, bloque 4</td>
+                                    <td><span class="badge bg-danger">Eliminar</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-primary-dark fst-italic mt-2">
+                        <i class="fas fa-circle-info text-warning me-1"></i> Los datos se muestran dinámicamente desde el <code>ArrayList</code> almacenado en la sesión.
+                    </p>
+
+                    <!-- ===== BOTONES SIMULADOS ===== -->
+                    <div class="d-flex flex-wrap gap-3 mt-4 pt-3 border-top border-2 border-warning">
+                        <a href="#" class="btn-agregar"><i class="fas fa-plus me-2"></i>Agregar nueva persona</a>
+                        <a href="#" class="btn-ver"><i class="fas fa-eye me-2"></i>Ver Personas</a>
+                        <span class="footer-badge ms-auto"><i class="fas fa-database me-1"></i> ArrayList</span>
+                        <span class="footer-badge"><i class="fas fa-server me-1"></i> Servlet</span>
+                        <span class="footer-badge"><i class="fas fa-bootstrap me-1"></i> Bootstrap 5</span>
+                        <span class="footer-badge"><i class="fas fa-user-circle me-1"></i> HttpSession</span>
+                    </div>
+
+                </div> <!-- /card-body -->
+            </div> <!-- /card-main -->
+
+            <!-- pie de página -->
+            <div class="text-center mt-4">
+                <span class="badge bg-warning-subtle text-primary-dark px-4 py-2 rounded-pill border border-warning">
+                    <i class="fas fa-code me-2"></i> Servlet · JSP · JavaBeans · Sesión · ArrayList · Bootstrap 5
+                </span>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
