@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laboratorio #2 framework — Spring Boot</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+    background-attachment: fixed;
+    color: #2c3e50;
+    line-height: 1.6;
+    padding: 30px 15px;
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 100%;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 45px;
+    border-radius: 16px;
+    /*box-shadow: 0 25px 60px rgba(0,0,0,0.4);*/
+  }
+
+  /* ===== HERO HEADER ===== */
+  .hero {
+    text-align: center;
+    padding: 45px 30px 40px;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 60%, #1e3c72 100%);
+    border-radius: 16px;
+    color: #ffffff;
+    margin-bottom: 40px;
+    box-shadow: 0 15px 40px rgba(30, 60, 114, 0.4);
+    position: relative;
+    overflow: hidden;
+    border-bottom: 4px solid #f39c12;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -10%;
+    width: 300px; height: 300px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60%; left: -5%;
+    width: 250px; height: 250px;
+    background: rgba(243,156,18,0.08);
+    border-radius: 50%;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: #f39c12;
+    color: #1e3c72;
+    padding: 6px 18px;
+    border-radius: 30px;
+    font-size: 0.85em;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 4px 12px rgba(243,156,18,0.4);
+  }
+  .hero-title {
+    font-size: 2.6em;
+    font-weight: 800;
+    margin-bottom: 14px;
+    letter-spacing: -0.5px;
+    color: #ffffff;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-subtitle {
+    font-size: 1.05em;
+    max-width: 720px;
+    margin: 0 auto 22px;
+    opacity: 0.95;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-subtitle strong { color: #f39c12; }
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-tags span {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.82em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.25s ease;
+  }
+  .hero-tags span:hover {
+    background: #f39c12;
+    color: #1e3c72;
+    border-color: #f39c12;
+    transform: translateY(-2px);
+  }
+
+  /* ===== OBJETIVOS ===== */
+  .objetivos { margin-bottom: 40px; }
+  .objetivos-card {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-left: 6px solid #1e3c72;
+    border-radius: 12px;
+    padding: 28px 32px;
+    box-shadow: 0 6px 20px rgba(30, 60, 114, 0.08);
+  }
+  .objetivos-title {
+    color: #1e3c72;
+    font-size: 1.35em;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .objetivos-subtitle {
+    color: #1e3c72;
+    font-size: 1.1em;
+    font-weight: 700;
+    margin-top: 22px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .objetivos-card p {
+    color: #343a40;
+    font-size: 0.98em;
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+  .objetivos-card code {
+    background: #e9ecef;
+    color: #1e3c72;
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-size: 0.88em;
+    font-family: 'Consolas', monospace;
+    font-weight: 600;
+  }
+  .objetivos-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .objetivos-list li {
+    padding: 10px 14px 10px 42px;
+    margin-bottom: 8px;
+    background: #ffffff;
+    border-radius: 8px;
+    position: relative;
+    border: 1px solid #dee2e6;
+    font-size: 0.94em;
+    color: #343a40;
+    line-height: 1.55;
+    transition: all 0.2s ease;
+  }
+  .objetivos-list li:hover {
+    border-color: #1e3c72;
+    transform: translateX(4px);
+    box-shadow: 0 3px 10px rgba(30, 60, 114, 0.12);
+  }
+  .objetivos-list li::before {
+    content: '▸';
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #f39c12;
+    font-weight: 900;
+    font-size: 1.1em;
+  }
+  .objetivos-list li strong { color: #1e3c72; }
+
+  /* ===== HEADINGS SECCIONES ===== */
+  h2 {
+    color: #ffffff;
+    margin-top: 45px;
+    margin-bottom: 22px;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    border-radius: 10px;
+    font-size: 1.35em;
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(30, 60, 114, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-left: 6px solid #f39c12;
+  }
+  h2::before { content: '📘'; font-size: 1.2em; }
+  h3 {
+    color: #343a40;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    font-size: 1.15em;
+    font-weight: 600;
+    padding-left: 12px;
+    border-left: 4px solid #f39c12;
+  }
+  .section { margin-bottom: 25px; padding: 5px 0; }
+
+  /* ===== TABLAS ===== */
+  .entity-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 18px 0 25px 0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    border: 1px solid #dee2e6;
+  }
+  .entity-table thead th {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #ffffff;
+    padding: 14px 18px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.95em;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .entity-table thead th:first-child { width: 60px; text-align: center; }
+  .entity-table tbody td {
+    padding: 13px 18px;
+    border-bottom: 1px solid #e9ecef;
+    font-size: 0.95em;
+    color: #343a40;
+    vertical-align: middle;
+  }
+  .entity-table tbody tr:last-child td { border-bottom: none; }
+  .entity-table tbody tr:nth-child(even) { background: #f8f9fa; }
+  .entity-table tbody tr:hover { background: #e7f0f9; transition: background 0.2s ease; }
+  .entity-table tbody td:first-child {
+    text-align: center;
+    font-weight: 700;
+    color: #1e3c72;
+    font-size: 1.05em;
+  }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.72em;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .badge-pk {
+    background: #c0392b;
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(192, 57, 43, 0.4);
+  }
+  .badge-fk {
+    background: #d35400;
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(211, 84, 0, 0.4);
+  }
+  .field-name {
+    font-family: 'Consolas', 'Courier New', monospace;
+    color: #1e3c72;
+    font-weight: 600;
+    font-size: 0.95em;
+  }
+  .field-desc { color: #6c757d; font-style: italic; font-size: 0.88em; }
+  .relation {
+    background: #eafaf1;
+    border-left: 5px solid #1e7e34;
+    padding: 16px 22px;
+    border-radius: 8px;
+    margin: 18px 0;
+    box-shadow: 0 2px 10px rgba(30, 126, 52, 0.08);
+  }
+  .relation strong { color: #145a32; display: block; margin-bottom: 6px; font-size: 1em; }
+  .relation ul { margin-left: 20px; color: #1e7e34; }
+  .relation li { margin-bottom: 4px; }
+  .criteria-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 25px 0 10px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+  }
+  .criteria-table thead th {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: #ffffff;
+    padding: 18px 22px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 1em;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .criteria-table thead th:last-child { text-align: center; width: 140px; }
+  .criteria-table tbody td {
+    padding: 15px 22px;
+    border-bottom: 1px solid #e9ecef;
+    font-size: 1em;
+    color: #343a40;
+  }
+  .criteria-table tbody td:last-child {
+    text-align: center;
+    font-weight: 700;
+    color: #1e3c72;
+    font-size: 1.15em;
+  }
+  .criteria-table tbody tr:nth-child(even) { background: #f8f9fa; }
+  .criteria-table tbody tr:hover {
+    background: #e7f0f9;
+    transform: scale(1.005);
+    transition: all 0.2s ease;
+  }
+  .criteria-table .total-row {
+    background: linear-gradient(135deg, #1e3c72, #2a5298) !important;
+    color: #ffffff;
+  }
+  .criteria-table .total-row td {
+    color: #ffffff;
+    font-size: 1.1em;
+    padding: 18px 22px;
+    border-bottom: none;
+  }
+  .criteria-table .total-row td:last-child { color: #f39c12; font-size: 1.3em; }
+  .requisitos-list { list-style: none; padding: 0; margin: 20px 0; }
+  .requisitos-list li {
+    padding: 12px 18px 12px 50px;
+    margin-bottom: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    position: relative;
+    border-left: 4px solid #1e3c72;
+    font-size: 0.98em;
+    color: #343a40;
+  }
+  .requisitos-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #1e7e34;
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+  footer {
+    text-align: center;
+    margin-top: 45px;
+    padding-top: 25px;
+    border-top: 2px solid #e9ecef;
+    color: #6c757d;
+    font-size: 0.9em;
+  }
+  @media (max-width: 600px) {
+    .container { padding: 22px; }
+    .hero { padding: 30px 18px; }
+    .hero-title { font-size: 1.8em; }
+    .hero-subtitle { font-size: 0.95em; }
+    .objetivos-card { padding: 20px; }
+    h2 { font-size: 1.1em; padding: 12px 16px; }
+    .entity-table thead th, .entity-table tbody td { padding: 10px 12px; font-size: 0.85em; }
+    .criteria-table thead th, .criteria-table tbody td { padding: 12px 14px; font-size: 0.9em; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HERO HEADER -->
+  <header class="hero">
+    <div class="hero-badge">🚀 Laboratorio #2 framework</div>
+    <h1 class="hero-title">Spring Boot & MVC</h1>
+    <p class="hero-subtitle">
+      Laboratorio · desarrollo de aplicaciones web con <strong>Spring Boot</strong>, patrón MVC,
+      persistencia con JPA y vistas con Thymeleaf
+    </p>
+    <div class="hero-tags">
+      <span>Spring Boot</span>
+      <span>Spring MVC</span>
+      <span>JPA / Hibernate</span>
+      <span>Thymeleaf</span>
+      <span>MySQL</span>
+      <span>Maven</span>
+    </div>
+  </header>
+
+  <!-- OBJETIVOS -->
+  <section class="objetivos">
+    <div class="objetivos-card">
+      <h2 class="objetivos-title">
+        <span class="icon">🎯</span> <span style="color:#fff;"> Objetivo</span>
+      </h2>
+      <p>
+        Desarrollar una aplicación web empresarial utilizando <strong>Spring Boot</strong> como framework
+        principal, aplicando el patrón de arquitectura <strong>MVC</strong> para separar la lógica de
+        negocio, el acceso a datos y la capa de presentación. La persistencia se gestionará con
+        <strong>Spring Data JPA</strong> sobre una base de datos relacional, y las vistas se construirán
+        con <strong>Thymeleaf</strong> integrando Bootstrap 5 para lograr un diseño moderno y responsivo.
+        Todo el proyecto se estructurará con <strong>Maven</strong> siguiendo las buenas prácticas de
+        Spring Boot.
+      </p>
+
+      <h3 class="objetivos-subtitle">
+        <span class="icon">✅</span> Objetivos específicos
+      </h3>
+      <ul class="objetivos-list">
+        <li>Configurar un proyecto <strong>Spring Boot</strong> desde cero con <strong>Spring Initializr</strong> y Maven como gestor de dependencias.</li>
+        <li>Implementar el patrón <strong>MVC</strong> usando <code>@Controller</code>, <code>@Service</code> y <code>@Repository</code> en Spring Boot.</li>
+        <li>Modelar entidades con <strong>JPA / Hibernate</strong> y mapear relaciones entre tablas mediante anotaciones (<code>@Entity</code>, <code>@OneToMany</code>, <code>@ManyToOne</code>, <code>@ManyToMany</code>).</li>
+        <li>Desarrollar operaciones <strong>CRUD</strong> completas usando <strong>Spring Data JPA</strong> y repositorios derivados.</li>
+        <li>Construir la capa de presentación con <strong>Thymeleaf</strong>, fragmentos reutilizables y formularios con <strong>Spring Form Binding</strong>.</li>
+        <li>Aplicar <strong>validación</strong> de datos con Bean Validation (<code>@Valid</code>, <code>@NotNull</code>, <code>@Size</code>).</li>
+        <li>Implementar <strong>consultas personalizadas</strong> con JPQL, <code>@Query</code> y filtros dinámicos con Criteria API.</li>
+        <li>Diseñar un <strong>menú de navegación</strong> modular y responsivo con Bootstrap 5 y Thymeleaf Layouts.</li>
+        <li>Integrar una base de datos relacional (<strong>MySQL / PostgreSQL</strong>) y gestionar el esquema con <code>application.properties</code>.</li>
+        <li>Aplicar <strong>buenas prácticas</strong>: inyección de dependencias, capas desacopladas, DTOs y manejo global de excepciones con <code>@ControllerAdvice</code>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- CLAVE A -->
+  <h2>Clave A — Base de datos libros_iniciales</h2>
+  <div class="section">
+    <h3>Tabla: Autores</h3>
+    <table class="entity-table">
+      <thead><tr><th>#</th><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="field-name">id_autor</span><span class="badge badge-pk">PK</span></td><td class="field-desc">Identificador único del autor</td></tr>
+        <tr><td>2</td><td><span class="field-name">nombre</span></td><td class="field-desc">Nombre completo del autor</td></tr>
+        <tr><td>3</td><td><span class="field-name">nacionalidad</span></td><td class="field-desc">País de origen del autor</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Tabla: Libros</h3>
+    <table class="entity-table">
+      <thead><tr><th>#</th><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="field-name">id_libro</span><span class="badge badge-pk">PK</span></td><td class="field-desc">Identificador único del libro</td></tr>
+        <tr><td>2</td><td><span class="field-name">título</span></td><td class="field-desc">Título del libro</td></tr>
+        <tr><td>3</td><td><span class="field-name">id_autor</span><span class="badge badge-fk">FK → Autores</span></td><td class="field-desc">Autor del libro</td></tr>
+        <tr><td>4</td><td><span class="field-name">portada</span></td><td class="field-desc">Campo para la imagen del libro</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Tabla: Categorias</h3>
+    <table class="entity-table">
+      <thead><tr><th>#</th><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="field-name">id_categoria</span><span class="badge badge-pk">PK</span></td><td class="field-desc">Identificador único de la categoría</td></tr>
+        <tr><td>2</td><td><span class="field-name">nombre</span></td><td class="field-desc">Nombre de la categoría</td></tr>
+      </tbody>
+    </table>
+
+    <div class="relation">
+      <strong>🔗 Relación</strong>
+      Un autor puede escribir más de un libro, y un libro puede pertenecer a más de una categoría.
+    </div>
+  </div>
+
+  <!-- CLAVE B -->
+  <h2>Clave B — Base de datos productos_iniciales</h2>
+  <div class="section">
+    <h3>Tabla: Categorías</h3>
+    <table class="entity-table">
+      <thead><tr><th>#</th><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="field-name">id_categoria</span><span class="badge badge-pk">PK</span></td><td class="field-desc">Identificador único</td></tr>
+        <tr><td>2</td><td><span class="field-name">nombre</span></td><td class="field-desc">Nombre de la categoría</td></tr>
+        <tr><td>3</td><td><span class="field-name">descripción</span></td><td class="field-desc">Descripción de la categoría</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Tabla: Productos</h3>
+    <table class="entity-table">
+      <thead><tr><th>#</th><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="field-name">id_producto</span><span class="badge badge-pk">PK</span></td><td class="field-desc">Identificador único</td></tr>
+        <tr><td>2</td><td><span class="field-name">nombre</span></td><td class="field-desc">Nombre del producto</td></tr>
+        <tr><td>3</td><td><span class="field-name">precio</span></td><td class="field-desc">Precio del producto</td></tr>
+        <tr><td>4</td><td><span class="field-name">id_categoria</span><span class="badge badge-fk">FK → Categorías</span></td><td class="field-desc">Categoría a la que pertenece</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Tabla: Imágenes de productos</h3>
+    <table class="entity-table">
+      <thead><tr><th>#</th><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="field-name">id_imagen</span><span class="badge badge-pk">PK</span></td><td class="field-desc">Identificador único</td></tr>
+        <tr><td>2</td><td><span class="field-name">id_producto</span><span class="badge badge-fk">FK → Productos</span></td><td class="field-desc">Producto asociado</td></tr>
+        <tr><td>3</td><td><span class="field-name">url_imagen</span></td><td class="field-desc">Ruta o URL de la imagen</td></tr>
+        <tr><td>4</td><td><span class="field-name">descripción</span></td><td class="field-desc">Descripción de la imagen</td></tr>
+      </tbody>
+    </table>
+
+    <div class="relation">
+      <strong>🔗 Relación inicial</strong>
+      <ul>
+        <li>Una categoría tiene muchos productos.</li>
+        <li>Un producto puede tener varias imágenes.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CLAVE C -->
+  <h2>Clave C — Base de datos autos_iniciales</h2>
+  <div class="section">
+    <h3>Tabla: Marcas</h3>
+    <table class="entity-table">
+      <thead><tr><th>#</th><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="field-name">id_marca</span><span class="badge badge-pk">PK</span></td><td class="field-desc">Identificador único</td></tr>
+        <tr><td>2</td><td><span class="field-name">nombre</span></td><td class="field-desc">Nombre de la marca</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Tabla: Modelos</h3>
+    <table class="entity-table">
+      <thead><tr><th>#</th><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="field-name">id_modelo</span><span class="badge badge-pk">PK</span></td><td class="field-desc">Identificador único</td></tr>
+        <tr><td>2</td><td><span class="field-name">nombre</span></td><td class="field-desc">Nombre del modelo</td></tr>
+        <tr><td>3</td><td><span class="field-name">id_marca</span><span class="badge badge-fk">FK → Marcas</span></td><td class="field-desc">Marca a la que pertenece</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Tabla: Autos</h3>
+    <table class="entity-table">
+      <thead><tr><th>#</th><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="field-name">id_auto</span><span class="badge badge-pk">PK</span></td><td class="field-desc">Identificador único</td></tr>
+        <tr><td>2</td><td><span class="field-name">id_modelo</span><span class="badge badge-fk">FK → Modelos</span></td><td class="field-desc">Modelo al que pertenece</td></tr>
+        <tr><td>3</td><td><span class="field-name">año</span></td><td class="field-desc">Año de fabricación</td></tr>
+        <tr><td>4</td><td><span class="field-name">foto</span></td><td class="field-desc">URL o nombre del archivo de imagen</td></tr>
+      </tbody>
+    </table>
+
+    <div class="relation">
+      <strong>🔗 Relación inicial</strong>
+      Una marca puede tener muchos modelos. Un modelo puede tener muchos autos. Cada auto puede tener su foto.
+    </div>
+  </div>
+
+  <!-- CLAVE D -->
+  <h2>Clave D — Base de datos mascotas_iniciales</h2>
+  <div class="section">
+    <h3>Tabla: Tipos de mascota</h3>
+    <table class="entity-table">
+      <thead><tr><th>#</th><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="field-name">id_tipo</span><span class="badge badge-pk">PK</span></td><td class="field-desc">Identificador único</td></tr>
+        <tr><td>2</td><td><span class="field-name">nombre</span></td><td class="field-desc">Ej. Perro, Gato, Conejo</td></tr>
+        <tr><td>3</td><td><span class="field-name">descripcion</span></td><td class="field-desc">Descripción del tipo</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Tabla: Mascotas</h3>
+    <table class="entity-table">
+      <thead><tr><th>#</th><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="field-name">id_mascota</span><span class="badge badge-pk">PK</span></td><td class="field-desc">Identificador único</td></tr>
+        <tr><td>2</td><td><span class="field-name">id_tipo</span><span class="badge badge-fk">FK → Tipos de mascota</span></td><td class="field-desc">Tipo de mascota</td></tr>
+        <tr><td>3</td><td><span class="field-name">nombre</span></td><td class="field-desc">Nombre de la mascota</td></tr>
+        <tr><td>4</td><td><span class="field-name">foto</span></td><td class="field-desc">URL o archivo de imagen</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Tabla: Adoptantes</h3>
+    <table class="entity-table">
+      <thead><tr><th>#</th><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="field-name">id_adoptante</span><span class="badge badge-pk">PK</span></td><td class="field-desc">Identificador único</td></tr>
+        <tr><td>2</td><td><span class="field-name">nombre</span></td><td class="field-desc">Nombre del adoptante</td></tr>
+        <tr><td>3</td><td><span class="field-name">telefono</span></td><td class="field-desc">Teléfono de contacto</td></tr>
+        <tr><td>4</td><td><span class="field-name">id_mascota</span><span class="badge badge-fk">FK → Mascotas</span></td><td class="field-desc">Mascota adoptada</td></tr>
+      </tbody>
+    </table>
+
+    <div class="relation">
+      <strong>🔗 Relación inicial</strong>
+      Un tipo de mascota puede tener muchas mascotas. Cada mascota pertenece a un tipo y puede ser adoptada por un adoptante. La tabla Mascotas incluye foto.
+    </div>
+  </div>
+
+  <!-- CLAVE E -->
+  <h2>Clave E — Base de datos galeria_iniciales</h2>
+  <div class="section">
+    <h3>Tabla: Artistas</h3>
+    <table class="entity-table">
+      <thead><tr><th>#</th><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="field-name">id_artista</span><span class="badge badge-pk">PK</span></td><td class="field-desc">Identificador único</td></tr>
+        <tr><td>2</td><td><span class="field-name">nombre</span></td><td class="field-desc">Nombre del artista</td></tr>
+        <tr><td>3</td><td><span class="field-name">nacionalidad</span></td><td class="field-desc">País de origen</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Tabla: Obras</h3>
+    <table class="entity-table">
+      <thead><tr><th>#</th><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="field-name">id_obra</span><span class="badge badge-pk">PK</span></td><td class="field-desc">Identificador único</td></tr>
+        <tr><td>2</td><td><span class="field-name">id_artista</span><span class="badge badge-fk">FK → Artistas</span></td><td class="field-desc">Artista creador</td></tr>
+        <tr><td>3</td><td><span class="field-name">titulo</span></td><td class="field-desc">Título de la obra</td></tr>
+        <tr><td>4</td><td><span class="field-name">imagen</span></td><td class="field-desc">URL o archivo de imagen</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Tabla: Exposiciones</h3>
+    <table class="entity-table">
+      <thead><tr><th>#</th><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="field-name">id_exposicion</span><span class="badge badge-pk">PK</span></td><td class="field-desc">Identificador único</td></tr>
+        <tr><td>2</td><td><span class="field-name">nombre</span></td><td class="field-desc">Nombre de la exposición</td></tr>
+        <tr><td>3</td><td><span class="field-name">fecha</span></td><td class="field-desc">Fecha de la exposición</td></tr>
+        <tr><td>4</td><td><span class="field-name">id_obra</span><span class="badge badge-fk">FK → Obras</span></td><td class="field-desc">Obra expuesta</td></tr>
+      </tbody>
+    </table>
+
+    <div class="relation">
+      <strong>🔗 Relación inicial</strong>
+      <ul>
+        <li>Un artista puede tener muchas obras.</li>
+        <li>Cada obra puede estar en varias exposiciones (aquí simplificado como 1 obra → 1 exposición para mantener 4 campos).</li>
+        <li>La tabla Obras incluye la imagen de la obra.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CLAVE F -->
+  <h2>Clave F — Base de datos Transformers_iniciales</h2>
+  <div class="section">
+    <h3>Tabla: Facciones</h3>
+    <table class="entity-table">
+      <thead><tr><th>#</th><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="field-name">id_faccion</span><span class="badge badge-pk">PK</span></td><td class="field-desc">Identificador único</td></tr>
+        <tr><td>2</td><td><span class="field-name">nombre</span></td><td class="field-desc">Autobots, Decepticons</td></tr>
+        <tr><td>3</td><td><span class="field-name">descripcion</span></td><td class="field-desc">Descripción de la facción</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Tabla: Personajes</h3>
+    <table class="entity-table">
+      <thead><tr><th>#</th><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="field-name">id_personaje</span><span class="badge badge-pk">PK</span></td><td class="field-desc">Identificador único</td></tr>
+        <tr><td>2</td><td><span class="field-name">id_faccion</span><span class="badge badge-fk">FK → Facciones</span></td><td class="field-desc">Facción a la que pertenece</td></tr>
+        <tr><td>3</td><td><span class="field-name">nombre</span></td><td class="field-desc">Nombre del personaje</td></tr>
+        <tr><td>4</td><td><span class="field-name">imagen</span></td><td class="field-desc">URL o archivo de imagen</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Tabla: Vehículos/Transformaciones</h3>
+    <table class="entity-table">
+      <thead><tr><th>#</th><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="field-name">id_vehiculo</span><span class="badge badge-pk">PK</span></td><td class="field-desc">Identificador único</td></tr>
+        <tr><td>2</td><td><span class="field-name">id_personaje</span><span class="badge badge-fk">FK → Personajes</span></td><td class="field-desc">Personaje asociado</td></tr>
+        <tr><td>3</td><td><span class="field-name">tipo</span></td><td class="field-desc">auto, avión, camión...</td></tr>
+        <tr><td>4</td><td><span class="field-name">modelo</span></td><td class="field-desc">Modelo del vehículo</td></tr>
+      </tbody>
+    </table>
+
+    <div class="relation">
+      <strong>🔗 Relación inicial</strong>
+      <ul>
+        <li>Cada facción tiene muchos personajes.</li>
+        <li>Cada personaje pertenece a una facción y tiene su vehículo/transformación.</li>
+        <li>La tabla Personajes incluye imagen.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- REQUISITOS -->
+  <h2>Requisitos</h2>
+  <div class="section">
+    <ul class="requisitos-list">
+      <li>Agregar los campos y tablas de ser necesario para cumplir con los requerimientos.</li>
+      <li>Llenar con al menos 100 registros las tablas.</li>
+      <li>Para cada clave se evalúa.</li>
+      <li>Requisitos indispensables: MVC, menú.</li>
+    </ul>
+
+    <table class="criteria-table">
+      <thead>
+        <tr><th>Criterio</th><th>Puntos</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Base de datos</td><td>10</td></tr>
+        <tr><td>MVC</td><td>20</td></tr>
+        <tr><td>CRUD</td><td>20</td></tr>
+        <tr><td>Consultas</td><td>20</td></tr>
+        <tr><td>Filtros/estadísticas</td><td>30</td></tr>
+        <tr class="total-row"><td>Total</td><td>100</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    Documento Claves.pdf — Publicado como página web
+  </footer>
+
+</div>
+</body>
+</html>
