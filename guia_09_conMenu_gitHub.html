@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Fullstack: Spring Boot + React (Vite)</title>
+
+    <!-- Hoja de estilos principal -->
+ 
+
+    <!-- Prism.js para colores de sintaxis -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+
+    <!-- Fuente Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Estilos NUEVOS (solo el botón de tema) -->
+    <style>
+	/* ============================================================
+   estilo.css — Guía Fullstack Spring Boot + React (Vite)
+   Estilos base + sistema de temas (dark / light)
+   ============================================================ */
+
+/* ============ RESET Y VARIABLES ============ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Tema oscuro (por defecto) */
+:root,
+[data-theme="dark"] {
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-tertiary: #21262d;
+    --bg-code: #1e1e1e;
+    --bg-header: #2d2d2d;
+    --border-color: #30363d;
+    --border-hover: #484f58;
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #6e7681;
+    --accent-blue: #58a6ff;
+    --accent-green: #3fb950;
+    --accent-yellow: #d29922;
+    --accent-red: #f85149;
+    --accent-purple: #bc8cff;
+    --accent-orange: #ffa657;
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --radius: 12px;
+    --hero-gradient: linear-gradient(135deg, #1a2332 0%, #0d1117 100%);
+    --hero-title-gradient: linear-gradient(135deg, #e6edf3 0%, #58a6ff 100%);
+    --scrollbar-thumb: #444;
+    --scrollbar-thumb-hover: #666;
+    --code-inline-bg: #21262d;
+    --code-inline-color: #ffa657;
+}
+
+/* Tema claro */
+[data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f6f8fa;
+    --bg-tertiary: #eaeef2;
+    --bg-code: #f6f8fa;
+    --bg-header: #eaeef2;
+    --border-color: #d0d7de;
+    --border-hover: #afb8c1;
+    --text-primary: #1f2328;
+    --text-secondary: #57606a;
+    --text-muted: #6e7781;
+    --accent-blue: #0969da;
+    --accent-green: #1a7f37;
+    --accent-yellow: #9a6700;
+    --accent-red: #cf222e;
+    --accent-purple: #8250df;
+    --accent-orange: #bc4c00;
+    --shadow: 0 8px 24px rgba(140, 149, 159, 0.2);
+    --radius: 12px;
+    --hero-gradient: linear-gradient(135deg, #ddf4ff 0%, #ffffff 100%);
+    --hero-title-gradient: linear-gradient(135deg, #1f2328 0%, #0969da 100%);
+    --scrollbar-thumb: #c1c8cf;
+    --scrollbar-thumb-hover: #a5adb6;
+    --code-inline-bg: #eaeef2;
+    --code-inline-color: #bc4c00;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.7;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ============ LAYOUT ============ */
+.layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 100vh;
+}
+
+/* ============ SIDEBAR ============ */
+.sidebar {
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    padding: 2rem 1.25rem;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+
+.sidebar-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-header h1 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    line-height: 1.3;
+}
+
+.sidebar-header .emoji {
+    font-size: 1.4rem;
+}
+
+.sidebar-header p {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+    line-height: 1.5;
+}
+
+.nav-section {
+    margin-bottom: 1.5rem;
+}
+
+.nav-section-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+    padding-left: 0.6rem;
+}
+
+.nav-list {
+    list-style: none;
+}
+
+.nav-list li a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.87rem;
+    border-radius: 8px;
+    transition: all 0.15s ease;
+    border-left: 2px solid transparent;
+}
+
+.nav-list li a:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-left-color: var(--accent-blue);
+}
+
+.nav-list .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+}
+
+.nav-backend .step-num {
+    color: var(--accent-green);
+}
+
+.nav-frontend .step-num {
+    color: var(--accent-purple);
+}
+
+/* ============ MAIN CONTENT ============ */
+.main {
+    max-width: 1100px;
+    padding: 3rem 3.5rem 6rem;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* ============ HERO ============ */
+.hero {
+    padding: 2.5rem 2rem;
+    background: var(--hero-gradient);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    margin-bottom: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(88, 166, 255, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.hero h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+    background: var(--hero-title-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.3;
+}
+
+.hero .subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+}
+
+.hero .meta-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.badge.java {
+    color: var(--accent-orange);
+    border-color: rgba(255, 166, 87, 0.3);
+}
+
+.badge.react {
+    color: var(--accent-blue);
+    border-color: rgba(88, 166, 255, 0.3);
+}
+
+.badge.mysql {
+    color: var(--accent-green);
+    border-color: rgba(63, 185, 80, 0.3);
+}
+
+.badge.vite {
+    color: var(--accent-purple);
+    border-color: rgba(188, 140, 255, 0.3);
+}
+
+.hero .intro-text {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+}
+
+.hero .intro-text strong {
+    color: var(--text-primary);
+}
+
+/* ============ SECTIONS ============ */
+.section {
+    margin-bottom: 3rem;
+    scroll-margin-top: 2rem;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.section-title.backend {
+    border-bottom-color: rgba(63, 185, 80, 0.5);
+}
+
+.section-title.frontend {
+    border-bottom-color: rgba(188, 140, 255, 0.5);
+}
+
+.step-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.75rem 2rem;
+    margin-bottom: 1.75rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+    scroll-margin-top: 2rem;
+}
+
+.step-card:hover {
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow);
+}
+
+.step-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    flex-shrink: 0;
+    color: #fff;
+}
+
+.step-number.green {
+    background: linear-gradient(135deg, #3fb950, #238636);
+}
+
+.step-number.yellow {
+    background: linear-gradient(135deg, #d29922, #9e6a03);
+}
+
+.step-number.blue {
+    background: linear-gradient(135deg, #58a6ff, #1f6feb);
+}
+
+.step-number.purple {
+    background: linear-gradient(135deg, #bc8cff, #8957e5);
+}
+
+.step-number.orange {
+    background: linear-gradient(135deg, #ffa657, #db6d28);
+}
+
+.step-number.red {
+    background: linear-gradient(135deg, #f85149, #da3633);
+}
+
+.step-number.cyan {
+    background: linear-gradient(135deg, #39c5cf, #1a7f88);
+}
+
+.step-number.pink {
+    background: linear-gradient(135deg, #f778ba, #bf4b8a);
+}
+
+.step-info h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.step-info .location {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    background: var(--bg-tertiary);
+    padding: 0.15rem 0.5rem;
+    border-radius: 5px;
+    display: inline-block;
+    margin-top: 0.25rem;
+}
+
+.step-info .objective {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+}
+
+/* ============ CODE BLOCKS ============ */
+.code-wrapper {
+    position: relative;
+    margin: 1rem 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    background: var(--bg-code);
+}
+
+.code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    background: var(--bg-header);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.code-header .lang {
+    font-family: 'Fira Code', monospace;
+    color: var(--accent-blue);
+    font-weight: 500;
+}
+
+pre[class*="language-"] {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    background: var(--bg-code) !important;
+    padding: 1.25rem 1.5rem !important;
+    font-size: 0.85rem;
+    line-height: 1.65;
+    /*max-height: 600px;*/
+    overflow: auto;
+    tab-size: 4;
+}
+
+pre[class*="language-"]::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+pre[class*="language-"]::-webkit-scrollbar-track {
+    background: var(--bg-code);
+}
+
+pre[class*="language-"]::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 5px;
+}
+
+pre[class*="language-"]::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+}
+
+code[class*="language-"] {
+    font-family: 'Fira Code', 'JetBrains Mono', monospace !important;
+    font-size: 0.85rem !important;
+    text-shadow: none !important;
+}
+
+/* ============ LISTS ============ */
+.explanations {
+    list-style: none;
+    margin-top: 1rem;
+}
+
+.explanations li {
+    position: relative;
+    padding: 0.5rem 0 0.5rem 1.5rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+.explanations li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--accent-blue);
+    font-weight: bold;
+}
+
+.explanations li strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.explanations li code {
+    font-family: 'Fira Code', monospace;
+    background: var(--code-inline-bg);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.82rem;
+    color: var(--code-inline-color);
+}
+
+/* ============ FLOW DIAGRAM ============ */
+.flow-diagram {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    overflow-x: auto;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.flow-diagram h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.flow-grid {
+    display: flex;
+    gap: 1.5rem;
+    min-width: max-content;
+    align-items: stretch;
+}
+
+.flow-column {
+    flex: 1;
+    min-width: 280px;
+    background: var(--bg-tertiary);
+    border-radius: 10px;
+    padding: 1.25rem;
+    border: 1px solid var(--border-color);
+    transition: background-color 0.3s ease;
+}
+
+.flow-column.backend {
+    border-top: 3px solid var(--accent-green);
+}
+
+.flow-column.frontend {
+    border-top: 3px solid var(--accent-purple);
+}
+
+.flow-column h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.flow-column.backend h4 {
+    color: var(--accent-green);
+}
+
+.flow-column.frontend h4 {
+    color: var(--accent-purple);
+}
+
+.flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.55rem 0;
+    font-size: 0.83rem;
+    color: var(--text-secondary);
+    position: relative;
+}
+
+.flow-step:not(:last-child)::after {
+    content: '↓';
+    position: absolute;
+    left: 10px;
+    bottom: -6px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.flow-step .flow-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.flow-step .flow-text {
+    padding-top: 1px;
+    line-height: 1.4;
+}
+
+.flow-step .flow-text strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.flow-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-blue);
+    font-size: 1.5rem;
+    font-weight: bold;
+    min-width: 60px;
+}
+
+/* ============ TABLES ============ */
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    margin: 1.5rem 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+thead {
+    background: var(--bg-tertiary);
+}
+
+th {
+    padding: 0.85rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+td {
+    padding: 0.85rem 1rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: top;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background: rgba(88, 166, 255, 0.04);
+}
+
+td code {
+    font-family: 'Fira Code', monospace;
+    background: var(--code-inline-bg);
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: var(--code-inline-color);
+}
+
+/* ============ PROGRESS BAR ============ */
+.progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0;
+    background: linear-gradient(90deg, var(--accent-green), var(--accent-blue), var(--accent-purple));
+    z-index: 1000;
+    transition: width 0.1s ease;
+}
+
+/* ============ FOOTER ============ */
+.footer {
+    text-align: center;
+    padding: 2rem 0;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 3rem;
+}
+
+.footer .heart {
+    color: var(--accent-red);
+}
+
+/* ============ ANIMATIONS ============ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.step-card {
+    animation: fadeIn 0.4s ease;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1024px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        position: relative;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .main {
+        padding: 2rem 1.5rem 4rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero {
+        padding: 1.75rem 1.25rem;
+    }
+
+    .hero h1 {
+        font-size: 1.5rem;
+    }
+
+    .step-card {
+        padding: 1.25rem 1rem;
+    }
+
+    .step-header {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+    }
+
+    pre[class*="language-"] {
+        padding: 1rem !important;
+        font-size: 0.78rem;
+    }
+}
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1100;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.55rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all 0.25s ease;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle .icon {
+            font-size: 1.1rem;
+            line-height: 1;
+            transition: transform 0.4s ease;
+        }
+
+        .theme-toggle:hover .icon {
+            transform: rotate(20deg);
+        }
+
+        @media (max-width: 640px) {
+            .theme-toggle {
+                top: 0.75rem;
+                right: 0.75rem;
+                padding: 0.45rem 0.8rem;
+                font-size: 0.78rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Barra de progreso de scroll -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Botón de cambio de tema -->
+<button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
+    <span class="icon" id="themeIcon">🌙</span>
+    <span id="themeLabel">Oscuro</span>
+</button>
+
+<div class="layout">
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h1><span class="emoji">📚</span> Guía Fullstack</h1>
+            <p>Spring Boot + React (Vite) — Gestión de Marcas</p>
+        </div>
+
+        <nav>
+            <div class="nav-section">
+                <div class="nav-section-title">Arquitectura</div>
+                <ul class="nav-list">
+                    <li><a href="#arquitectura">🗺️ Diagrama Fullstack</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">☕ Backend</div>
+                <ul class="nav-list nav-backend">
+                    <li><a href="#paso1"><span class="step-num">1</span> Base de Datos</a></li>
+                    <li><a href="#paso2"><span class="step-num">2</span> DataSource y JPA</a></li>
+                    <li><a href="#paso3"><span class="step-num">3</span> Entidad Marca</a></li>
+                    <li><a href="#paso4"><span class="step-num">4</span> Repositorio JPA</a></li>
+                    <li><a href="#paso5"><span class="step-num">5</span> Capa de Servicio</a></li>
+                    <li><a href="#paso6"><span class="step-num">6</span> Controlador REST</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">⚛️ Frontend</div>
+                <ul class="nav-list nav-frontend">
+                    <li><a href="#paso7"><span class="step-num">7</span> Crear Proyecto Vite</a></li>
+                    <li><a href="#paso8"><span class="step-num">8</span> Componente React</a></li>
+                    <li><a href="#paso9"><span class="step-num">9</span> Montaje en App</a></li>
+                    <li><a href="#paso10"><span class="step-num">10</span> Ejecución Fullstack</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Resumen</div>
+                <ul class="nav-list">
+                    <li><a href="#flujo">📊 Flujo de Datos</a></li>
+                </ul>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="main">
+
+        <!-- HERO -->
+        <section class="hero">
+            <h1>📚 Guía Fullstack Paso a Paso: Spring Boot + React (Vite)</h1>
+            <p class="subtitle">Construcción de la API REST y Consumo desde Frontend para la Gestión de Marcas</p>
+            <div class="meta-badges">
+                <span class="badge java">☕ Java / Spring Boot</span>
+                <span class="badge react">⚛️ React + TypeScript</span>
+                <span class="badge mysql">🗄️ MySQL</span>
+                <span class="badge vite">⚡ Vite</span>
+            </div>
+            <p class="intro-text" style="margin-top: 1.5rem;">
+                Esta guía documenta el <strong>orden cronológico y arquitectónico completo</strong> para construir el sistema Fullstack:
+            </p>
+            <p class="intro-text">
+                <strong>1. Backend (Spring Boot + JPA + MySQL):</strong> Desde la base de datos hasta el controlador REST.<br>
+                <strong>2. Frontend (React + TypeScript + Vite):</strong> Desde la creación del proyecto con Vite hasta el componente <code style="background:var(--bg-tertiary);padding:0.1rem 0.4rem;border-radius:4px;font-family:'Fira Code',monospace;color:var(--accent-orange);">ConsultaAgregaMarca.tsx</code> y su ejecución en el navegador.
+            </p>
+			<p class="intro-text">
+					<h3>Objetivos</h3>
+					<ul>
+<li>Crear la base de datos física y la tabla donde se almacenarán las marcas.</li>
+<li>Establecer la conexión JDBC y el dialecto de Hibernate.</li>
+<li>Mapear la tabla marcas a una clase Java gestionada por JPA.</li>
+<li>Proveer operaciones CRUD y métodos de búsqueda automáticamente.</li>
+<li>Aplicar la lógica de negocio y gestionar la transaccionalidad.</li>
+<li>Recibir peticiones HTTP y devolver respuestas en formato JSON.</li>
+<li>Crear un componente minimalista que solo consulte (GET) y agregue (POST) marcas, sin validaciones complejas.</li>
+
+					</ul>
+				</p>
+        </section>
+
+        <!-- ============ ARQUITECTURA ============ -->
+        <section class="section" id="arquitectura">
+            <h2 class="section-title">🗺️ 1. Diagrama de la Arquitectura Fullstack</h2>
+
+            <div class="flow-diagram">
+                <h3>🔀 Flujo Backend ⇄ Frontend</h3>
+                <div class="flow-grid">
+                    <div class="flow-column backend">
+                        <h4>☕ BACKEND (Spring Boot + MySQL)</h4>
+                        <div class="flow-step"><span class="flow-num">1</span><span class="flow-text"><strong>Base de Datos MySQL</strong><br>Tabla marcas</span></div>
+                        <div class="flow-step"><span class="flow-num">2</span><span class="flow-text"><strong>application.properties</strong><br>Conexión JDBC / DataSource</span></div>
+                        <div class="flow-step"><span class="flow-num">3</span><span class="flow-text"><strong>Entidad JPA</strong><br>Marca.java</span></div>
+                        <div class="flow-step"><span class="flow-num">4</span><span class="flow-text"><strong>Repositorio JPA</strong><br>MarcaRepository.java</span></div>
+                        <div class="flow-step"><span class="flow-num">5</span><span class="flow-text"><strong>Capa de Servicio</strong><br>MarcaService &amp; MarcaServiceImpl</span></div>
+                        <div class="flow-step"><span class="flow-num">6</span><span class="flow-text"><strong>Controlador REST</strong><br>MarcaRestController.java</span></div>
+                    </div>
+
+                    <div class="flow-arrow">⇄</div>
+
+                    <div class="flow-column frontend">
+                        <h4>⚛️ FRONTEND (React + Vite + TypeScript)</h4>
+                        <div class="flow-step"><span class="flow-num">7</span><span class="flow-text"><strong>Creación de Proyecto Vite</strong><br>npm create vite@latest front2</span></div>
+                        <div class="flow-step"><span class="flow-num">8</span><span class="flow-text"><strong>Componente React</strong><br>ConsultaAgregaMarca.tsx</span></div>
+                        <div class="flow-step"><span class="flow-num">9</span><span class="flow-text"><strong>Integración en App.tsx</strong><br>Renderizado principal</span></div>
+                        <div class="flow-step"><span class="flow-num">10</span><span class="flow-text"><strong>Ejecución del Servidor Dev</strong><br>npm run dev → localhost:5173</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ PARTE 1: BACKEND ============ -->
+        <section class="section">
+            <h2 class="section-title backend">🧱 PARTE 1: Backend en Spring Boot (Paso a Paso)</h2>
+
+            <!-- PASO 1 -->
+            <article class="step-card" id="paso1">
+                <div class="step-header">
+                    <div class="step-number green">1</div>
+                    <div class="step-info">
+                        <h3>🟢 Base de Datos Relacional (MySQL / MariaDB)</h3>
+                        <span class="location">SQL</span>
+                        <p class="objective"><strong>Objetivo:</strong> Crear la base de datos física y la tabla donde se almacenarán las marcas.</p>
+                    </div>
+                </div>
+
+                <div class="code-wrapper">
+                    <div class="code-header"><span>Script SQL</span><span class="lang">sql</span></div>
+                    <pre><code class="language-sql">-- 1. Crear la base de datos si no existe
+CREATE DATABASE IF NOT EXISTS `registro`
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+
+USE `registro`;
+
+-- 2. Crear la tabla marcas
+CREATE TABLE IF NOT EXISTS `marcas` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `nombre` VARCHAR(100) NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 3. Datos iniciales de prueba
+INSERT INTO `marcas` (`nombre`) VALUES
+('Toyota'),
+('Nissan'),
+('Honda'),
+('Ford');</code></pre>
+                </div>
+
+                <ul class="explanations">
+                    <li><strong><code>id</code></strong>: Clave primaria autoincremental (<code>AUTO_INCREMENT</code>).</li>
+                    <li><strong><code>nombre</code></strong>: Texto obligatorio (<code>NOT NULL</code>) de hasta 100 caracteres.</li>
+                    <li><strong><code>created_at</code></strong>: Marca temporal asignada por defecto por MySQL (<code>CURRENT_TIMESTAMP</code>).</li>
+                </ul>
+            </article>
+
+            <!-- PASO 2 -->
+            <article class="step-card" id="paso2">
+                <div class="step-header">
+                    <div class="step-number yellow">2</div>
+                    <div class="step-info">
+                        <h3>🟡 Configuración del DataSource y JPA</h3>
+                        <span class="location">src/main/resources/application.properties</span>
+                        <p class="objective"><strong>Objetivo:</strong> Establecer la conexión JDBC y el dialecto de Hibernate.</p>
+                    </div>
+                </div>
+
+                <div class="code-wrapper">
+                    <div class="code-header"><span>application.properties</span><span class="lang">properties</span></div>
+                    <pre><code class="language-properties">spring.application.name=autosPRO
+
+# 1. Parámetros de conexión JDBC a MySQL
+spring.datasource.url=jdbc:mysql://localhost:3306/registro?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+spring.datasource.username=root
+spring.datasource.password=
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# 2. Configuración de Hibernate / JPA
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+spring.jpa.hibernate.ddl-auto=none
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.open-in-view=true</code></pre>
+                </div>
+
+                <ul class="explanations">
+                    <li><strong><code>spring.datasource.url</code></strong>: URL al servidor local en puerto <code>3306</code> y base <code>registro</code>.</li>
+                    <li><strong><code>spring.datasource.username/password</code></strong>: Credenciales de MySQL (XAMPP usa usuario <code>root</code> sin contraseña).</li>
+                    <li><strong><code>spring.datasource.driver-class-name</code></strong>: Driver oficial <code>com.mysql.cj.jdbc.Driver</code>.</li>
+                    <li><strong><code>spring.jpa.hibernate.ddl-auto=none</code></strong>: No modifica la tabla existente en MySQL.</li>
+                    <li><strong><code>spring.jpa.show-sql=true</code></strong>: Imprime las sentencias SQL en la consola para depuración.</li>
+                </ul>
+            </article>
+
+            <!-- PASO 3 -->
+            <article class="step-card" id="paso3">
+                <div class="step-header">
+                    <div class="step-number blue">3</div>
+                    <div class="step-info">
+                        <h3>🔵 Entidad y Mapeo Objeto-Relacional</h3>
+                        <span class="location">src/main/java/com/example/autosPRO/entity/Marca.java</span>
+                        <p class="objective"><strong>Objetivo:</strong> Mapear la tabla <code>marcas</code> a una clase Java gestionada por JPA.</p>
+                    </div>
+                </div>
+
+                <div class="code-wrapper">
+                    <div class="code-header"><span>Marca.java</span><span class="lang">java</span></div>
+                    <pre><code class="language-java">package com.example.autosPRO.entity;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "marcas")
+public class Marca {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "nombre", nullable = false, length = 100)
+    private String nombre;
+
+    @Column(name = "created_at", updatable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdAt;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "marca", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List&lt;Modelo&gt; modelos = new ArrayList&lt;&gt;();
+
+    public Marca() {
+    }
+
+    public Marca(Integer id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
+    }
+
+    // Getters y Setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public List&lt;Modelo&gt; getModelos() { return modelos; }
+    public void setModelos(List&lt;Modelo&gt; modelos) { this.modelos = modelos; }
+}</code></pre>
+                </div>
+
+                <ul class="explanations">
+                    <li><strong><code>@Entity</code></strong> y <strong><code>@Table(name = "marcas")</code></strong>: Define la clase como entidad JPA vinculada a la tabla.</li>
+                    <li><strong><code>@Id</code></strong> y <strong><code>@GeneratedValue(strategy = GenerationType.IDENTITY)</code></strong>: Clave primaria autoincrementable.</li>
+                    <li><strong><code>@Column</code></strong>: Enlaza los atributos con sus columnas correspondientes.</li>
+                    <li><strong><code>@JsonIgnore</code></strong>: Evita la recursión infinita en la serialización JSON con <code>Modelo</code>.</li>
+                </ul>
+            </article>
+
+            <!-- PASO 4 -->
+            <article class="step-card" id="paso4">
+                <div class="step-header">
+                    <div class="step-number purple">4</div>
+                    <div class="step-info">
+                        <h3>🟣 Repositorio Spring Data JPA</h3>
+                        <span class="location">src/main/java/com/example/autosPRO/repository/MarcaRepository.java</span>
+                        <p class="objective"><strong>Objetivo:</strong> Proveer operaciones CRUD y métodos de búsqueda automáticamente.</p>
+                    </div>
+                </div>
+
+                <div class="code-wrapper">
+                    <div class="code-header"><span>MarcaRepository.java</span><span class="lang">java</span></div>
+                    <pre><code class="language-java">package com.example.autosPRO.repository;
+
+import com.example.autosPRO.entity.Marca;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface MarcaRepository extends JpaRepository&lt;Marca, Integer&gt; {
+    List&lt;Marca&gt; findByNombreContainingIgnoreCase(String nombre);
+}</code></pre>
+                </div>
+
+                <ul class="explanations">
+                    <li><strong><code>JpaRepository&lt;Marca, Integer&gt;</code></strong>: Otorga métodos preconstruidos: <code>findAll()</code>, <code>findById()</code>, <code>save()</code>, <code>deleteById()</code>.</li>
+                    <li><strong><code>findByNombreContainingIgnoreCase</code></strong>: Consulta derivada que genera un <code>LIKE %nombre%</code> automático.</li>
+                </ul>
+            </article>
+
+            <!-- PASO 5 -->
+            <article class="step-card" id="paso5">
+                <div class="step-header">
+                    <div class="step-number orange">5</div>
+                    <div class="step-info">
+                        <h3>🟠 Capa de Servicio</h3>
+                        <span class="location">MarcaService.java · MarcaServiceImpl.java</span>
+                        <p class="objective"><strong>Objetivo:</strong> Aplicar la lógica de negocio y gestionar la transaccionalidad.</p>
+                    </div>
+                </div>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:1rem 0 0.5rem;color:var(--text-primary);">5.1. Interfaz de Servicio</h4>
+                <div class="code-wrapper">
+                    <div class="code-header"><span>MarcaService.java</span><span class="lang">java</span></div>
+                    <pre><code class="language-java">package com.example.autosPRO.service;
+
+import com.example.autosPRO.entity.Marca;
+import java.util.List;
+import java.util.Optional;
+
+public interface MarcaService {
+    List&lt;Marca&gt; findAll();
+    Optional&lt;Marca&gt; findById(Integer id);
+    List&lt;Marca&gt; findByFiltros(String nombre);
+    Marca save(Marca marca);
+    Marca update(Integer id, Marca marca);
+    boolean deleteById(Integer id);
+}</code></pre>
+                </div>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:1rem 0 0.5rem;color:var(--text-primary);">5.2. Implementación del Servicio</h4>
+                <div class="code-wrapper">
+                    <div class="code-header"><span>MarcaServiceImpl.java</span><span class="lang">java</span></div>
+                    <pre><code class="language-java">package com.example.autosPRO.service.impl;
+
+import com.example.autosPRO.entity.Marca;
+import com.example.autosPRO.repository.MarcaRepository;
+import com.example.autosPRO.service.MarcaService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@Transactional
+public class MarcaServiceImpl implements MarcaService {
+
+    private final MarcaRepository marcaRepository;
+
+    @Autowired
+    public MarcaServiceImpl(MarcaRepository marcaRepository) {
+        this.marcaRepository = marcaRepository;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List&lt;Marca&gt; findAll() {
+        return marcaRepository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional&lt;Marca&gt; findById(Integer id) {
+        return marcaRepository.findById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List&lt;Marca&gt; findByFiltros(String nombre) {
+        if (nombre != null &amp;&amp; !nombre.trim().isEmpty()) {
+            return marcaRepository.findByNombreContainingIgnoreCase(nombre.trim());
+        }
+        return marcaRepository.findAll();
+    }
+
+    @Override
+    public Marca save(Marca marca) {
+        return marcaRepository.save(marca);
+    }
+
+    @Override
+    public Marca update(Integer id, Marca marcaDetails) {
+        return marcaRepository.findById(id).map(marca -&gt; {
+            marca.setNombre(marcaDetails.getNombre());
+            return marcaRepository.save(marca);
+        }).orElseThrow(() -&gt; new RuntimeException("Marca no encontrada con id: " + id));
+    }
+
+    @Override
+    public boolean deleteById(Integer id) {
+        if (marcaRepository.existsById(id)) {
+            marcaRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+}</code></pre>
+                </div>
+
+                <ul class="explanations">
+                    <li><strong><code>@Service</code></strong>: Registra el componente de servicio.</li>
+                    <li><strong><code>@Transactional(readOnly = true)</code></strong>: Optimiza el rendimiento en operaciones de lectura.</li>
+                </ul>
+            </article>
+
+            <!-- PASO 6 -->
+            <article class="step-card" id="paso6">
+                <div class="step-header">
+                    <div class="step-number red">6</div>
+                    <div class="step-info">
+                        <h3>🔴 Controlador REST</h3>
+                        <span class="location">src/main/java/com/example/autosPRO/controller/MarcaRestController.java</span>
+                        <p class="objective"><strong>Objetivo:</strong> Recibir peticiones HTTP y devolver respuestas en formato JSON.</p>
+                    </div>
+                </div>
+
+                <div class="code-wrapper">
+                    <div class="code-header"><span>MarcaRestController.java</span><span class="lang">java</span></div>
+                    <pre><code class="language-java">package com.example.autosPRO.controller;
+
+import com.example.autosPRO.entity.Marca;
+import com.example.autosPRO.service.MarcaService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/marcas")
+@CrossOrigin(origins = "*")
+public class MarcaRestController {
+
+    private final MarcaService marcaService;
+
+    @Autowired
+    public MarcaRestController(MarcaService marcaService) {
+        this.marcaService = marcaService;
+    }
+
+    // Endpoint GET: Consultar todas las marcas
+    @GetMapping
+    public ResponseEntity&lt;List&lt;Marca&gt;&gt; getAll(@RequestParam(required = false) String buscar) {
+        return ResponseEntity.ok(marcaService.findByFiltros(buscar));
+    }
+
+    // Endpoint POST: Registrar una nueva marca
+    @PostMapping
+    public ResponseEntity&lt;?&gt; create(@RequestBody Marca marca) {
+        if (marca.getNombre() == null || marca.getNombre().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("El nombre de la marca es obligatorio");
+        }
+        Marca saved = marcaService.save(marca);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    }
+}</code></pre>
+                </div>
+
+                <ul class="explanations">
+                    <li><strong><code>@RestController</code></strong>: Serializa automáticamente las respuestas a JSON.</li>
+                    <li><strong><code>@CrossOrigin(origins = "*")</code></strong>: Permite peticiones desde el frontend de Vite (<code>http://localhost:5173</code>).</li>
+                    <li><strong><code>@GetMapping</code></strong>: Responde a <code>GET /api/marcas</code>.</li>
+                    <li><strong><code>@PostMapping</code></strong>: Responde a <code>POST /api/marcas</code> recibiendo el JSON <code>{ "nombre": "..." }</code>.</li>
+                </ul>
+            </article>
+        </section>
+
+        <!-- ============ PARTE 2: FRONTEND ============ -->
+        <section class="section">
+            <h2 class="section-title frontend">⚛️ PARTE 2: Frontend en React + TypeScript con Vite</h2>
+
+            <!-- PASO 7 -->
+            <article class="step-card" id="paso7">
+                <div class="step-header">
+                    <div class="step-number cyan">7</div>
+                    <div class="step-info">
+                        <h3>🚀 Creación del Proyecto Frontend con Vite</h3>
+                        <span class="location">Terminal</span>
+                        <p class="objective">Crear la aplicación React con TypeScript usando Vite.</p>
+                    </div>
+                </div>
+
+                <div class="code-wrapper">
+                    <div class="code-header"><span>Comandos de terminal</span><span class="lang">bash</span></div>
+                    <pre><code class="language-bash"># 1. Crear el proyecto Vite con la plantilla React + TypeScript
+npm create vite@latest front2 -- --template react-ts
+
+# 2. Entrar a la carpeta del proyecto recién creado
+cd front2
+
+# 3. Instalar las dependencias iniciales de React
+npm install</code></pre>
+                </div>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:1rem 0 0.5rem;color:var(--text-primary);">Estructura generada en <code>front2/</code>:</h4>
+                <div class="code-wrapper">
+                    <div class="code-header"><span>Estructura de carpetas</span><span class="lang">text</span></div>
+                    <pre><code class="language-text">front2/
+├── index.html              # HTML base con &lt;div id="root"&gt;&lt;/div&gt;
+├── package.json            # Dependencias (react, react-dom, vite, typescript)
+├── tsconfig.json           # Configuración de TypeScript
+├── vite.config.ts          # Configuración del empaquetador Vite
+└── src/
+    ├── App.tsx             # Componente raíz
+    ├── main.tsx            # Punto de entrada de React (createRoot)
+    ├── index.css           # Estilos globales
+    └── components/         # Carpeta donde colocaremos nuestros componentes</code></pre>
+                </div>
+            </article>
+
+            <!-- PASO 8 -->
+            <article class="step-card" id="paso8">
+                <div class="step-header">
+                    <div class="step-number pink">8</div>
+                    <div class="step-info">
+                        <h3>🧩 Creación del Componente <code>ConsultaAgregaMarca.tsx</code></h3>
+                        <span class="location">front2/src/components/ConsultaAgregaMarca.tsx</span>
+                        <p class="objective"><strong>Objetivo:</strong> Crear un componente minimalista que solo consulte (<code>GET</code>) y agregue (<code>POST</code>) marcas, sin validaciones complejas.</p>
+                    </div>
+                </div>
+
+                <div class="code-wrapper">
+                    <div class="code-header"><span>ConsultaAgregaMarca.tsx</span><span class="lang">tsx</span></div>
+                    <pre><code class="language-tsx">// 1. Importamos los hooks necesarios y el tipo de evento de React
+import { useEffect, useState, type FormEvent } from 'react';
+
+// 2. Definimos la estructura del objeto Marca (coincide con el backend)
+interface Marca {
+  id: number;
+  nombre: string;
+  createdAt?: string;
+}
+
+// 3. Componente funcional mínimo (Solo Consultar y Agregar)
+export const ConsultaAgregaMarca = () =&gt; {
+  // 4. Estados locales: lista de marcas y valor del campo de texto
+  const [marcas, setMarcas] = useState&lt;Marca[]&gt;([]);
+  const [nombre, setNombre] = useState&lt;string&gt;('');
+
+  // 5. Función para consultar las marcas desde el backend (GET)
+  const cargarMarcas = () =&gt; {
+    fetch('http://localhost:8080/api/marcas')
+      .then((res) =&gt; res.json())
+      .then((data) =&gt; setMarcas(data));
+  };
+
+  // 6. useEffect: Se ejecuta una sola vez al cargar el componente
+  useEffect(() =&gt; {
+    cargarMarcas();
+  }, []);
+
+  // 7. Función para agregar una marca al backend (POST)
+  const agregarMarca = (e: FormEvent) =&gt; {
+    e.preventDefault(); // Evita que se recargue la página al enviar el formulario
+
+    fetch('http://localhost:8080/api/marcas', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre }),
+    })
+      .then((res) =&gt; res.json())
+      .then(() =&gt; {
+        setNombre('');     // Limpiamos el campo de texto
+        cargarMarcas();   // Refrescamos la tabla con el nuevo registro
+      });
+  };
+
+  // 8. Renderizado del formulario y la tabla
+  return (
+    &lt;div style={{ padding: '20px' }}&gt;
+      &lt;h2&gt;Consulta y Registro de Marcas&lt;/h2&gt;
+
+      {/* Formulario simple para agregar */}
+      &lt;form onSubmit={agregarMarca} style={{ marginBottom: '15px' }}&gt;
+        &lt;input
+          type="text"
+          placeholder="Nombre de la marca"
+          value={nombre}
+          onChange={(e) =&gt; setNombre(e.target.value)}
+        /&gt;
+        &lt;button type="submit" style={{ marginLeft: '10px' }}&gt;
+          Agregar
+        &lt;/button&gt;
+      &lt;/form&gt;
+
+      {/* Tabla simple para listar */}
+      &lt;table cellPadding={8} style={{ width: '100%', borderCollapse: 'collapse', color: 'blue' }}&gt;
+        &lt;thead&gt;
+          &lt;tr&gt;
+            &lt;th&gt;ID&lt;/th&gt;
+            &lt;th&gt;Nombre&lt;/th&gt;
+            &lt;th&gt;Fecha de Creación&lt;/th&gt;
+          &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+          {marcas.map((m) =&gt; (
+            &lt;tr key={m.id}&gt;
+              &lt;td&gt;{m.id}&lt;/td&gt;
+              &lt;td&gt;{m.nombre}&lt;/td&gt;
+              &lt;td&gt;{m.createdAt || 'Sin fecha'}&lt;/td&gt;
+            &lt;/tr&gt;
+          ))}
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default ConsultaAgregaMarca;</code></pre>
+                </div>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:1rem 0 0.5rem;color:var(--text-primary);">Explicación de los bloques del componente:</h4>
+                <ol class="explanations" style="list-style:none;counter-reset:item;">
+                    <li style="counter-increment:item;"><strong><code>interface Marca</code></strong>: Define el contrato de datos esperado (<code>id</code>, <code>nombre</code>, <code>createdAt</code>).</li>
+                    <li><strong><code>useState&lt;Marca[]&gt;([])</code></strong>: Almacena el arreglo de marcas recibidas del backend.</li>
+                    <li><strong><code>useState&lt;string&gt;('')</code></strong>: Controla en tiempo real el valor del <code>&lt;input&gt;</code> mediante <em>two-way binding</em>.</li>
+                    <li><strong><code>cargarMarcas()</code></strong>: Ejecuta <code>fetch('http://localhost:8080/api/marcas')</code> con método <code>GET</code> por defecto.</li>
+                    <li><strong><code>useEffect(..., [])</code></strong>: Hook de ciclo de vida que dispara <code>cargarMarcas()</code> tras el primer render.</li>
+                    <li><strong><code>agregarMarca()</code></strong>: Envía el objeto JSON <code>{ nombre }</code> mediante <code>POST</code> con cabecera <code>Content-Type: application/json</code>. Tras completarse, limpia el input y recarga la tabla.</li>
+                </ol>
+            </article>
+
+            <!-- PASO 9 -->
+            <article class="step-card" id="paso9">
+                <div class="step-header">
+                    <div class="step-number blue">9</div>
+                    <div class="step-info">
+                        <h3>🖥️ Montaje del Componente en <code>App.tsx</code> y <code>main.tsx</code></h3>
+                    </div>
+                </div>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:1rem 0 0.5rem;color:var(--text-primary);">9.1. <code>front2/src/App.tsx</code></h4>
+                <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:0.75rem;">Importa y muestra el componente <code>ConsultaAgregaMarca</code>:</p>
+                <div class="code-wrapper">
+                    <div class="code-header"><span>App.tsx</span><span class="lang">tsx</span></div>
+                    <pre><code class="language-tsx">import React from 'react';
+import ConsultaAgregaMarca from './components/ConsultaAgregaMarca';
+
+export const App: React.FC = () =&gt; {
+  return (
+    &lt;div style={{ color: 'black', minHeight: '100vh', backgroundColor: '#f8fafc', padding: '20px 10px' }}&gt;
+      &lt;ConsultaAgregaMarca /&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default App;</code></pre>
+                </div>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:1rem 0 0.5rem;color:var(--text-primary);">9.2. <code>front2/src/main.tsx</code></h4>
+                <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:0.75rem;">Punto de anclaje que monta React en el DOM del navegador (<code>index.html</code>):</p>
+                <div class="code-wrapper">
+                    <div class="code-header"><span>main.tsx</span><span class="lang">tsx</span></div>
+                    <pre><code class="language-tsx">import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App.tsx';
+
+createRoot(document.getElementById('root')!).render(
+  &lt;StrictMode&gt;
+    &lt;App /&gt;
+  &lt;/StrictMode&gt;,
+);</code></pre>
+                </div>
+            </article>
+
+            <!-- PASO 10 -->
+            <article class="step-card" id="paso10">
+                <div class="step-header">
+                    <div class="step-number green">10</div>
+                    <div class="step-info">
+                        <h3>🌐 Ejecución y Prueba Fullstack</h3>
+                    </div>
+                </div>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:1rem 0 0.5rem;color:var(--text-primary);">1. Iniciar el Backend (Spring Boot en el puerto 8080)</h4>
+                <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:0.75rem;">Desde la raíz del proyecto:</p>
+                <div class="code-wrapper">
+                    <div class="code-header"><span>Terminal</span><span class="lang">bash</span></div>
+                    <pre><code class="language-bash">./mvnw spring-boot:run</code></pre>
+                </div>
+                <p style="font-size:0.88rem;color:var(--text-muted);margin-top:-0.5rem;margin-bottom:1rem;font-style:italic;">El servidor arranca en <code>http://localhost:8080</code> y expone <code>/api/marcas</code>.</p>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:1rem 0 0.5rem;color:var(--text-primary);">2. Iniciar el Frontend (Vite en el puerto 5173)</h4>
+                <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:0.75rem;">En otra terminal, dentro de la carpeta <code>front2/</code>:</p>
+                <div class="code-wrapper">
+                    <div class="code-header"><span>Terminal</span><span class="lang">bash</span></div>
+                    <pre><code class="language-bash">cd front2
+npm run dev</code></pre>
+                </div>
+                <p style="font-size:0.88rem;color:var(--text-muted);margin-top:-0.5rem;font-style:italic;">Abre el navegador en <code>http://localhost:5173</code>.</p>
+            </article>
+        </section>
+
+        <!-- ============ RESUMEN ============ -->
+        <section class="section" id="flujo">
+            <h2 class="section-title">📊 3. Resumen General del Flujo de Datos</h2>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Paso</th>
+                        <th>Acción</th>
+                        <th>Origen</th>
+                        <th>Destino</th>
+                        <th>Método / Protocolo</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><strong>1</strong></td>
+                        <td>Carga inicial de la página</td>
+                        <td><code>front2</code> (<code>useEffect</code>)</td>
+                        <td>Spring Boot (<code>MarcaRestController</code>)</td>
+                        <td><code>GET http://localhost:8080/api/marcas</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>2</strong></td>
+                        <td>Consulta a Base de Datos</td>
+                        <td><code>MarcaServiceImpl</code></td>
+                        <td>MySQL (<code>tabla marcas</code>)</td>
+                        <td><code>SELECT id, nombre, created_at FROM marcas;</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>3</strong></td>
+                        <td>Retorno de datos</td>
+                        <td>MySQL → Spring Boot</td>
+                        <td><code>front2</code> (<code>setMarcas</code>)</td>
+                        <td><code>200 OK</code> + <code>JSON Array</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>4</strong></td>
+                        <td>Registro de nueva marca</td>
+                        <td><code>front2</code> (<code>agregarMarca</code>)</td>
+                        <td>Spring Boot (<code>@PostMapping</code>)</td>
+                        <td><code>POST http://localhost:8080/api/marcas</code> <code>{ "nombre": "BMW" }</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>5</strong></td>
+                        <td>Inserción en Base de Datos</td>
+                        <td><code>MarcaRepository.save()</code></td>
+                        <td>MySQL (<code>tabla marcas</code>)</td>
+                        <td><code>INSERT INTO marcas (nombre) VALUES ('BMW');</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>6</strong></td>
+                        <td>Refresco automático</td>
+                        <td><code>front2</code></td>
+                        <td>Spring Boot</td>
+                        <td><code>GET http://localhost:8080/api/marcas</code> (Tabla actualizada)</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <p>📚 Guía Fullstack Spring Boot + React (Vite) · Hecha con <span class="heart">❤</span> para desarrolladores</p>
+        </footer>
+
+    </main>
+</div>
+
+<!-- ============ SCRIPTS ============ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-properties.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-tsx.min.js"></script>
+
+<script>
+    // ============ TEMA CLARO / OSCURO ============
+    (function () {
+        const html = document.documentElement;
+        const btn = document.getElementById('themeToggle');
+        const icon = document.getElementById('themeIcon');
+        const label = document.getElementById('themeLabel');
+
+        // Detectar preferencia guardada o del sistema
+        const saved = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const initial = saved || (prefersDark ? 'dark' : 'light');
+
+        applyTheme(initial);
+
+        btn.addEventListener('click', () => {
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            applyTheme(next);
+            localStorage.setItem('theme', next);
+        });
+
+        function applyTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            if (theme === 'dark') {
+                icon.textContent = '🌙';
+                label.textContent = 'Oscuro';
+                // Tema oscuro para Prism
+                document.querySelector('link[href*="prism-tomorrow"]')?.setAttribute('href', 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css');
+            } else {
+                icon.textContent = '☀️';
+                label.textContent = 'Claro';
+                // Tema claro para Prism
+                document.querySelector('link[href*="prism"]')?.setAttribute('href', 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css');
+            }
+        }
+    })();
+
+    // ============ BARRA DE PROGRESO ============
+    const progressBar = document.getElementById('progressBar');
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.width = progress + '%';
+    });
+
+    // Resaltar sintaxis al cargar
+    if (typeof Prism !== 'undefined') {
+        Prism.highlightAll();
+    }
+</script>
+
+</body>
+</html>
